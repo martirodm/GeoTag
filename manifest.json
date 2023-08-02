@@ -1,0 +1,19 @@
+{
+  "name": "GeoTag",
+  "label": "GeoTag",
+  "type": "widget",
+  "version": "1.11.0",
+  "exbVersion": "1.11.0",
+  "author": "Martí Rodríguez and Romà Sardà",
+  "description": "GeoTag and see all the geotagged files stored on SharePoint with this powerfull widget",
+  "copyright": "",
+  "license": "http://www.apache.org/licenses/LICENSE-2.0",
+  "properties": {},
+  "translatedLocales": [
+    "en"
+  ],
+  "defaultSize": {
+    "width": 400,
+    "height": 400
+  }
+}

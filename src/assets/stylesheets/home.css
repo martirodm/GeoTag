@@ -1,0 +1,13 @@
+.Body{
+    text-align: justify;
+    font-weight: bolder;
+    color: whitesmoke;
+}
+
+.ButtonCred {
+    outline: 2px solid #f5f5f5;
+    background-color: transparent;
+    border-radius: 5px;
+    color: whitesmoke;
+  }
+  
