@@ -9,6 +9,5 @@ GeoTag files from SharePoint on one or multiple locations. Simple and user frien
 
 Developed by GeoSYS
 
-
-![Logo](icon.svg)
+![Logo](/src/assets/images/geosys.png)
 
