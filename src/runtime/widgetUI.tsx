@@ -13,6 +13,7 @@ import SeeFilesView from './Views/SeeFilesView'
 import GeoTagView from './Views/GeoTagView'
 import SettingsView from './Views/SettingsView'
 import AppCredentialsView from './Views/AppCredentialsView'
+import SiteNameView from './Views/SiteNameView'
 //------------------------------------------------------------
 
 const DataSourceRenderer = ({ configured, useDataSource, query, widgetId, dataRender }) => {
@@ -24,6 +25,8 @@ const DataSourceRenderer = ({ configured, useDataSource, query, widgetId, dataRe
   const [seeFilesHovered, setSeeFilesHovered] = useState(false);
   const [geoTagHovered, setGeoTagHovered] = useState(false);
   const [settingsHovered, setSettingsHovered] = useState(false)
+
+  const excludedViews = ['AppCredentials', 'SiteName']
 
 
   if (!configured) {
@@ -49,11 +52,11 @@ const DataSourceRenderer = ({ configured, useDataSource, query, widgetId, dataRe
           <Spacer y={0.5} />
         </div>
         <div className="left-bar">
-          {view === 'home' || view === 'AppCredentials'
-            ? <button className='ButtonSelected' onClick={() => { if (view !== 'AppCredentials') setPrevView(view); setView('home'); setTitle('Home') }}>
+          {view === 'home' || view === 'AppCredentials' || view === 'SiteName'
+            ? <button className='ButtonSelected' onClick={() => { if (!excludedViews.includes(view)) setPrevView(view); setView('home'); setTitle('Home') }}>
               <img src={String(BlackIcons.HomeIconBlack)} /> <br />
             </button>
-            : <button className={homeHovered ? 'ButtonHover' : 'ButtonNotSelected'} onMouseOver={() => setHomeHovered(true)}  onMouseOut={() => setHomeHovered(false)} onClick={() => { if (view !== 'AppCredentials') setPrevView(view); setView('home'); setTitle('Home'); setHomeHovered(false); }}>
+            : <button className={homeHovered ? 'ButtonHover' : 'ButtonNotSelected'} onMouseOver={() => setHomeHovered(true)}  onMouseOut={() => setHomeHovered(false)} onClick={() => { if (!excludedViews.includes(view)) setPrevView(view); setView('home'); setTitle('Home'); setHomeHovered(false); }}>
               <img src={String(homeHovered ? HoverIcons.HomeIconHover : WhiteIcons.HomeIconWhite)} />
             </button>
           }
@@ -62,7 +65,7 @@ const DataSourceRenderer = ({ configured, useDataSource, query, widgetId, dataRe
             ? <button className='ButtonSelected' onClick={() => { setPrevView(view); setView('seeFiles'); setTitle('See GeoTagged Files') }}>
               <img src={String(BlackIcons.EyeFileIconBlack)} /> <br />
             </button>
-            : <button className={seeFilesHovered ? 'ButtonHover' : 'ButtonNotSelected'} onMouseOver={() => setSeeFilesHovered(true)}  onMouseOut={() => setSeeFilesHovered(false)} onClick={() => { if (view !== 'AppCredentials') setPrevView(view); setView('seeFiles'); setTitle('See GeoTagged Files'); setSeeFilesHovered(false); }}>
+            : <button className={seeFilesHovered ? 'ButtonHover' : 'ButtonNotSelected'} onMouseOver={() => setSeeFilesHovered(true)}  onMouseOut={() => setSeeFilesHovered(false)} onClick={() => { if (!excludedViews.includes(view)) setPrevView(view); setView('seeFiles'); setTitle('See GeoTagged Files'); setSeeFilesHovered(false); }}>
               <img src={String(seeFilesHovered ? HoverIcons.EyeFileIconHover : WhiteIcons.EyeFileIconWhite)} />
             </button>
           }
@@ -71,7 +74,7 @@ const DataSourceRenderer = ({ configured, useDataSource, query, widgetId, dataRe
             ? <button className='ButtonSelected' onClick={() => { setPrevView(view); setView('geoTag'); setTitle('GeoTag File') }}>
               <img src={String(BlackIcons.GeoTagIconBlack)} /> <br />
             </button>
-            : <button className={geoTagHovered ? 'ButtonHover' : 'ButtonNotSelected'} onMouseOver={() => setGeoTagHovered(true)}  onMouseOut={() => setGeoTagHovered(false)} onClick={() => { if (view !== 'AppCredentials') setPrevView(view); setView('geoTag'); setTitle('GeoTag File'); setGeoTagHovered(false); }}>
+            : <button className={geoTagHovered ? 'ButtonHover' : 'ButtonNotSelected'} onMouseOver={() => setGeoTagHovered(true)}  onMouseOut={() => setGeoTagHovered(false)} onClick={() => { if (!excludedViews.includes(view)) setPrevView(view); setView('geoTag'); setTitle('GeoTag File'); setGeoTagHovered(false); }}>
               <img src={String(geoTagHovered ? HoverIcons.GeoTagIconHover : WhiteIcons.GeoTagIconWhite)} />
             </button>
           }
@@ -80,7 +83,7 @@ const DataSourceRenderer = ({ configured, useDataSource, query, widgetId, dataRe
             ? <button className='ButtonSelected' onClick={() => { setPrevView(view); setView('settings'); setTitle('Settings') }}>
               <img src={String(BlackIcons.SettingIconBlack)} /> <br />
             </button>
-            : <button className={settingsHovered ? 'ButtonHover' : 'ButtonNotSelected'} onMouseOver={() => setSettingsHovered(true)}  onMouseOut={() => setSettingsHovered(false)} onClick={() => { if (view !== 'AppCredentials') setPrevView(view); setView('settings'); setTitle('Settings'); setSettingsHovered(false); }}>
+            : <button className={settingsHovered ? 'ButtonHover' : 'ButtonNotSelected'} onMouseOver={() => setSettingsHovered(true)}  onMouseOut={() => setSettingsHovered(false)} onClick={() => { if (!excludedViews.includes(view)) setPrevView(view); setView('settings'); setTitle('Settings'); setSettingsHovered(false); }}>
               <img src={String(settingsHovered ? HoverIcons.SettingIconHover : WhiteIcons.SettingIconWhite)} />
             </button>
           }
@@ -98,6 +101,7 @@ const DataSourceRenderer = ({ configured, useDataSource, query, widgetId, dataRe
           {view === 'geoTag' && <GeoTagView />}
           {view === 'settings' && <SettingsView />}
           {view === 'AppCredentials' && <AppCredentialsView />}
+          {view === 'SiteName' && <SiteNameView />}
         </div>
       </div>
     </div >

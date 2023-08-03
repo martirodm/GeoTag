@@ -25,12 +25,13 @@ const AppCredentialsView = () => {
 
   return (
     <div className='Body'>
+      <div>Write Credentials:</div>
       <form onSubmit={handleSend}>
-        <div>Write Credentials:</div>
+        <br />
         <input
           type='text'
           name='client_id'
-          placeholder='client_id'
+          placeholder='Application (client) ID'
           value={formData.client_id}
           onChange={handleChange}
           required
@@ -39,7 +40,7 @@ const AppCredentialsView = () => {
         <input
           type='text'
           name='client_secret'
-          placeholder='client_secret'
+          placeholder='Client secret value'
           value={formData.client_secret}
           onChange={handleChange}
           required
@@ -48,7 +49,7 @@ const AppCredentialsView = () => {
         <input
           type='text'
           name='tenant_id'
-          placeholder='tenant_id'
+          placeholder='Directory (tenant) ID'
           value={formData.tenant_id}
           onChange={handleChange}
           required
