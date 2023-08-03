@@ -1,13 +1,33 @@
-.Body{
-    text-align: justify;
+.Body {
+    text-align: center;
     font-weight: bolder;
     color: whitesmoke;
 }
 
-.ButtonCred {
+.Body button{
     outline: 2px solid #f5f5f5;
     background-color: transparent;
     border-radius: 5px;
     color: whitesmoke;
+}
+
+.Body input {
+    outline: 2px solid #f5f5f5;
+    border-radius: 5px;
+    background: transparent;
+    text-align: center;
+    color: whitesmoke;
+}
+
+/* For Firefox */
+.Body input::-moz-placeholder {
+    color: #c8c8c8;
+    opacity: 1; 
   }
+  
+  /* For Chrome, Safari, and Opera */
+  .Body input::-webkit-input-placeholder {
+    color: #c8c8c8;
+  }
+
   
