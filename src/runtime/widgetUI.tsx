@@ -2,11 +2,12 @@ import React, { useState, createContext, useContext } from 'react'
 //import { DataSourceComponent } from 'jimu-core'
 import { Spacer } from '@nextui-org/react'
 import '../assets/stylesheets/css.css'
+import '../assets/stylesheets/warning.css'
 
-import * as BlackIcons from '../assets/images/Black/indexBlack';
-import * as WhiteIcons from '../assets/images/White/indexWhite';
-import * as HoverIcons from '../assets/images/Hover/indexHover';
-
+import * as BlackIcons from '../assets/images/Black/indexBlack'
+import * as WhiteIcons from '../assets/images/White/indexWhite'
+import * as HoverIcons from '../assets/images/Hover/indexHover'
+import InsertDataSource from '../assets/images/InsertDataSource.svg'
 //---------------------Views---------------------------------
 import HomeView from './Views/HomeView'
 import SeeFilesView from './Views/SeeFilesView'
@@ -46,12 +47,15 @@ const DataSourceRenderer = ({ configured, useDataSource, query, widgetId, dataRe
 
   if (!configured) {
     return (
-      <div className="container">
-        <div className="widget-use-feature-layer">
-          <h3>Insert Data Source Plis</h3>
+      <div className="InsertDataSource">
+        <div className="titleWarning">GeoTag</div>
+        <div className="subtitleWarning">Please Insert Data Source</div>
+        <div className="imageContainer">
+          <img src={InsertDataSource} />
         </div>
       </div>
     )
+
   }
 
   return (
@@ -77,7 +81,7 @@ const DataSourceRenderer = ({ configured, useDataSource, query, widgetId, dataRe
           }
           <Spacer y={0.5} />
           {view === 'seeFiles'
-            ? <button className='ButtonSelected' onClick={() => { if(view !== 'seeFiles') setPrevView(view); setView('seeFiles'); setTitle('See GeoTagged Files') }}>
+            ? <button className='ButtonSelected' onClick={() => { if (view !== 'seeFiles') setPrevView(view); setView('seeFiles'); setTitle('See GeoTagged Files') }}>
               <img src={String(BlackIcons.EyeFileIconBlack)} /> <br />
             </button>
             : <button className={seeFilesHovered ? 'ButtonHover' : 'ButtonNotSelected'} onMouseOver={() => setSeeFilesHovered(true)} onMouseOut={() => setSeeFilesHovered(false)} onClick={() => { if (!excludedViews.includes(view)) setPrevView(view); setView('seeFiles'); setTitle('See GeoTagged Files'); setSeeFilesHovered(false); }}>
@@ -86,7 +90,7 @@ const DataSourceRenderer = ({ configured, useDataSource, query, widgetId, dataRe
           }
           <Spacer y={0.5} />
           {view === 'geoTag'
-            ? <button className='ButtonSelected' onClick={() => { if(view !== 'geoTag') setPrevView(view); setView('geoTag'); setTitle('GeoTag File') }}>
+            ? <button className='ButtonSelected' onClick={() => { if (view !== 'geoTag') setPrevView(view); setView('geoTag'); setTitle('GeoTag File') }}>
               <img src={String(BlackIcons.GeoTagIconBlack)} /> <br />
             </button>
             : <button className={geoTagHovered ? 'ButtonHover' : 'ButtonNotSelected'} onMouseOver={() => setGeoTagHovered(true)} onMouseOut={() => setGeoTagHovered(false)} onClick={() => { if (!excludedViews.includes(view)) setPrevView(view); setView('geoTag'); setTitle('GeoTag File'); setGeoTagHovered(false); }}>
@@ -95,7 +99,7 @@ const DataSourceRenderer = ({ configured, useDataSource, query, widgetId, dataRe
           }
           <Spacer y={0.5} />
           {view === 'settings'
-            ? <button className='ButtonSelected' onClick={() => { if(view !== 'settings') setPrevView(view); setView('settings'); setTitle('Settings') }}>
+            ? <button className='ButtonSelected' onClick={() => { if (view !== 'settings') setPrevView(view); setView('settings'); setTitle('Settings') }}>
               <img src={String(BlackIcons.SettingIconBlack)} /> <br />
             </button>
             : <button className={settingsHovered ? 'ButtonHover' : 'ButtonNotSelected'} onMouseOver={() => setSettingsHovered(true)} onMouseOut={() => setSettingsHovered(false)} onClick={() => { if (!excludedViews.includes(view)) setPrevView(view); setView('settings'); setTitle('Settings'); setSettingsHovered(false); }}>
