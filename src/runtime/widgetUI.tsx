@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, createContext, useContext } from 'react'
 //import { DataSourceComponent } from 'jimu-core'
 import { Spacer } from '@nextui-org/react'
 import '../assets/stylesheets/css.css'
@@ -16,6 +16,8 @@ import AppCredentialsView from './Views/AppCredentialsView'
 import SiteNameView from './Views/SiteNameView'
 //------------------------------------------------------------
 
+export const SharedVariableContext = createContext(null);
+
 const DataSourceRenderer = ({ configured, useDataSource, query, widgetId, dataRender }) => {
   const [view, setView] = useState('home')
   const [title, setTitle] = useState('Home')
@@ -28,6 +30,19 @@ const DataSourceRenderer = ({ configured, useDataSource, query, widgetId, dataRe
 
   const excludedViews = ['AppCredentials', 'SiteName']
 
+  const [credentials, setCredentials] = useState({
+    client_id: '',
+    client_secret: '',
+    tenant_id: '',
+  })
+
+  const [siteName, setSiteName] = useState({
+    site_name: '',
+  })
+
+  if (view === prevView) {
+    setPrevView(null)
+  }
 
   if (!configured) {
     return (
@@ -45,7 +60,7 @@ const DataSourceRenderer = ({ configured, useDataSource, query, widgetId, dataRe
         <h3>{title}</h3>
         <div className='goBack'>
           {prevView &&
-            <button className='ButtonGoBack' onMouseOver={() => setGoBackHovered(true)} onMouseOut={() => setGoBackHovered(false)}  onClick={() =>{ setView(prevView); setPrevView(null); setGoBackHovered(false);}}>
+            <button className='ButtonGoBack' onMouseOver={() => setGoBackHovered(true)} onMouseOut={() => setGoBackHovered(false)} onClick={() => { setView(prevView); setGoBackHovered(false); }}>
               <img src={String(GoBackhovered ? HoverIcons.GoBackIconHover : WhiteIcons.GoBackIconWhite)} />
             </button>
           }
@@ -53,55 +68,57 @@ const DataSourceRenderer = ({ configured, useDataSource, query, widgetId, dataRe
         </div>
         <div className="left-bar">
           {view === 'home' || view === 'AppCredentials' || view === 'SiteName'
-            ? <button className='ButtonSelected' onClick={() => { if (!excludedViews.includes(view)) setPrevView(view); setView('home'); setTitle('Home') }}>
+            ? <button className='ButtonSelected' onClick={() => { if (!excludedViews.includes(view) && (view !== 'home')) setPrevView(view); setView('home'); setTitle('Home') }}>
               <img src={String(BlackIcons.HomeIconBlack)} /> <br />
             </button>
-            : <button className={homeHovered ? 'ButtonHover' : 'ButtonNotSelected'} onMouseOver={() => setHomeHovered(true)}  onMouseOut={() => setHomeHovered(false)} onClick={() => { if (!excludedViews.includes(view)) setPrevView(view); setView('home'); setTitle('Home'); setHomeHovered(false); }}>
+            : <button className={homeHovered ? 'ButtonHover' : 'ButtonNotSelected'} onMouseOver={() => setHomeHovered(true)} onMouseOut={() => setHomeHovered(false)} onClick={() => { if (!excludedViews.includes(view)) setPrevView(view); setView('home'); setTitle('Home'); setHomeHovered(false); }}>
               <img src={String(homeHovered ? HoverIcons.HomeIconHover : WhiteIcons.HomeIconWhite)} />
             </button>
           }
           <Spacer y={0.5} />
           {view === 'seeFiles'
-            ? <button className='ButtonSelected' onClick={() => { setPrevView(view); setView('seeFiles'); setTitle('See GeoTagged Files') }}>
+            ? <button className='ButtonSelected' onClick={() => { if(view !== 'seeFiles') setPrevView(view); setView('seeFiles'); setTitle('See GeoTagged Files') }}>
               <img src={String(BlackIcons.EyeFileIconBlack)} /> <br />
             </button>
-            : <button className={seeFilesHovered ? 'ButtonHover' : 'ButtonNotSelected'} onMouseOver={() => setSeeFilesHovered(true)}  onMouseOut={() => setSeeFilesHovered(false)} onClick={() => { if (!excludedViews.includes(view)) setPrevView(view); setView('seeFiles'); setTitle('See GeoTagged Files'); setSeeFilesHovered(false); }}>
+            : <button className={seeFilesHovered ? 'ButtonHover' : 'ButtonNotSelected'} onMouseOver={() => setSeeFilesHovered(true)} onMouseOut={() => setSeeFilesHovered(false)} onClick={() => { if (!excludedViews.includes(view)) setPrevView(view); setView('seeFiles'); setTitle('See GeoTagged Files'); setSeeFilesHovered(false); }}>
               <img src={String(seeFilesHovered ? HoverIcons.EyeFileIconHover : WhiteIcons.EyeFileIconWhite)} />
             </button>
           }
           <Spacer y={0.5} />
           {view === 'geoTag'
-            ? <button className='ButtonSelected' onClick={() => { setPrevView(view); setView('geoTag'); setTitle('GeoTag File') }}>
+            ? <button className='ButtonSelected' onClick={() => { if(view !== 'geoTag') setPrevView(view); setView('geoTag'); setTitle('GeoTag File') }}>
               <img src={String(BlackIcons.GeoTagIconBlack)} /> <br />
             </button>
-            : <button className={geoTagHovered ? 'ButtonHover' : 'ButtonNotSelected'} onMouseOver={() => setGeoTagHovered(true)}  onMouseOut={() => setGeoTagHovered(false)} onClick={() => { if (!excludedViews.includes(view)) setPrevView(view); setView('geoTag'); setTitle('GeoTag File'); setGeoTagHovered(false); }}>
+            : <button className={geoTagHovered ? 'ButtonHover' : 'ButtonNotSelected'} onMouseOver={() => setGeoTagHovered(true)} onMouseOut={() => setGeoTagHovered(false)} onClick={() => { if (!excludedViews.includes(view)) setPrevView(view); setView('geoTag'); setTitle('GeoTag File'); setGeoTagHovered(false); }}>
               <img src={String(geoTagHovered ? HoverIcons.GeoTagIconHover : WhiteIcons.GeoTagIconWhite)} />
             </button>
           }
           <Spacer y={0.5} />
           {view === 'settings'
-            ? <button className='ButtonSelected' onClick={() => { setPrevView(view); setView('settings'); setTitle('Settings') }}>
+            ? <button className='ButtonSelected' onClick={() => { if(view !== 'settings') setPrevView(view); setView('settings'); setTitle('Settings') }}>
               <img src={String(BlackIcons.SettingIconBlack)} /> <br />
             </button>
-            : <button className={settingsHovered ? 'ButtonHover' : 'ButtonNotSelected'} onMouseOver={() => setSettingsHovered(true)}  onMouseOut={() => setSettingsHovered(false)} onClick={() => { if (!excludedViews.includes(view)) setPrevView(view); setView('settings'); setTitle('Settings'); setSettingsHovered(false); }}>
+            : <button className={settingsHovered ? 'ButtonHover' : 'ButtonNotSelected'} onMouseOver={() => setSettingsHovered(true)} onMouseOut={() => setSettingsHovered(false)} onClick={() => { if (!excludedViews.includes(view)) setPrevView(view); setView('settings'); setTitle('Settings'); setSettingsHovered(false); }}>
               <img src={String(settingsHovered ? HoverIcons.SettingIconHover : WhiteIcons.SettingIconWhite)} />
             </button>
           }
           <Spacer y={0.5} />
         </div>
         <div className="body">
-          {view === 'home' && <HomeView setView={setView} setPrevView={setPrevView} />}
-          {view === 'seeFiles' && <SeeFilesView
-            useDataSource={useDataSource}
-            query={query}
-            widgetId={widgetId}
-            queryCount
-            dataRender={dataRender}
-          />}
-          {view === 'geoTag' && <GeoTagView />}
-          {view === 'settings' && <SettingsView />}
-          {view === 'AppCredentials' && <AppCredentialsView />}
-          {view === 'SiteName' && <SiteNameView />}
+          <SharedVariableContext.Provider value={{ credentials, setCredentials, siteName, setSiteName }}>
+            {view === 'home' && <HomeView setView={setView} setPrevView={setPrevView} />}
+            {view === 'seeFiles' && <SeeFilesView
+              useDataSource={useDataSource}
+              query={query}
+              widgetId={widgetId}
+              queryCount
+              dataRender={dataRender}
+            />}
+            {view === 'geoTag' && <GeoTagView />}
+            {view === 'settings' && <SettingsView />}
+            {view === 'AppCredentials' && <AppCredentialsView setView={setView} />}
+            {view === 'SiteName' && <SiteNameView setView={setView} />}
+          </SharedVariableContext.Provider>
         </div>
       </div>
     </div >
