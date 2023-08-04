@@ -1,0 +1,42 @@
+.InsertDataSource {
+    width: 100%;
+    height: 100%;
+    border-radius: 20px;
+    background-color: #23272f;
+    font-weight: bolder;
+    color: whitesmoke;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px; /* Add padding to prevent image sticking to the edge of the container */
+    box-sizing: border-box; /* Make sure padding is included in height and width */
+}
+
+.titleWarning {
+    font-size: 35px;
+    font-weight: bolder;
+    color: whitesmoke;
+    text-align: center;
+    margin-bottom: 20px; /* Add space between title and subtitle */
+}
+
+.subtitleWarning {
+    font-size: 20px;
+    font-weight: bolder;
+    color: yellow;
+    text-align: center;
+    margin-bottom: 20px; /* Add space between subtitle and image */
+}
+
+.imageContainer {
+    width: 100%; /* Image container takes full width */
+    display: flex; 
+    justify-content: center; /* Center the image horizontally */
+}
+
+.imageContainer img {
+    max-width: 100%; /* Make sure the image doesn't overflow */
+    max-height: 300px; /* Limit image height */
+    object-fit: contain; /* Keep image aspect ratio */
+}
