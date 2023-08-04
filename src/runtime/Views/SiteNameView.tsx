@@ -1,14 +1,13 @@
-import React, { useState } from 'react'
+import React, { useContext } from 'react'
+import { SharedVariableContext } from '../widgetUI'
 import '../../assets/stylesheets/home.css'
 
-const SiteNameView = () => {
-  const [formData, setFormData] = useState({
-    site_name: '',
-  })
+const SiteNameView = ({ setView }) => {
+  const { siteName, setSiteName } = useContext(SharedVariableContext)
 
   const handleChange = (event) => {
     const { name, value } = event.target
-    setFormData((prevData) => ({
+    setSiteName((prevData) => ({
       ...prevData,
       [name]: value,
     }))
@@ -16,7 +15,8 @@ const SiteNameView = () => {
 
   const handleSend = (event) => {
     event.preventDefault()
-    console.log("Site name:" + formData.site_name)
+    console.log("Site name: " + siteName.site_name)
+    setView('home')
   }
 
   return (
@@ -29,7 +29,7 @@ const SiteNameView = () => {
           type='text'
           name='site_name'
           placeholder='site_name'
-          value={formData.site_name}
+          value={siteName.site_name}
           onChange={handleChange}
           required
         />

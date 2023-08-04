@@ -1,27 +1,25 @@
-import React, { useState } from 'react';
-import '../../assets/stylesheets/home.css';
+import React, { useContext  } from 'react'
+import { SharedVariableContext } from '../widgetUI'
+import '../../assets/stylesheets/home.css'
 
-const AppCredentialsView = () => {
-  const [formData, setFormData] = useState({
-    client_id: '',
-    client_secret: '',
-    tenant_id: '',
-  });
+const AppCredentialsView = ({ setView }) => {
+  const { credentials, setCredentials } = useContext(SharedVariableContext)
 
   const handleChange = (event) => {
     const { name, value } = event.target;
-    setFormData((prevData) => ({
+    setCredentials((prevData) => ({
       ...prevData,
       [name]: value,
-    }));
-  };
+    }))
+  }
 
   const handleSend = (event) => {
-    event.preventDefault(); // If I don't have it, I get: This item is not published. Please open this item in Experience Builder, then click Publish to publish it.
+    event.preventDefault() // If I don't have it, I get: This item is not published. Please open this item in Experience Builder, then click Publish to publish it.
     // If all fields are filled I console.log()
-    const data = `client_id: ${formData.client_id}\nclient_secret: ${formData.client_secret}\ntenant_id: ${formData.tenant_id}`;
-    console.log(data);
-  };
+    const data = `client_id: ${credentials.client_id}\nclient_secret: ${credentials.client_secret}\ntenant_id: ${credentials.tenant_id}`
+    console.log(data)
+    setView('home')
+  }
 
   return (
     <div className='Body'>
@@ -32,7 +30,7 @@ const AppCredentialsView = () => {
           type='text'
           name='client_id'
           placeholder='Application (client) ID'
-          value={formData.client_id}
+          value={credentials.client_id}
           onChange={handleChange}
           required
         />
@@ -41,7 +39,7 @@ const AppCredentialsView = () => {
           type='text'
           name='client_secret'
           placeholder='Client secret value'
-          value={formData.client_secret}
+          value={credentials.client_secret}
           onChange={handleChange}
           required
         />
@@ -50,7 +48,7 @@ const AppCredentialsView = () => {
           type='text'
           name='tenant_id'
           placeholder='Directory (tenant) ID'
-          value={formData.tenant_id}
+          value={credentials.tenant_id}
           onChange={handleChange}
           required
         />
@@ -64,7 +62,7 @@ const AppCredentialsView = () => {
         </div>
       </form>
     </div>
-  );
-};
+  )
+}
 
 export default AppCredentialsView;
