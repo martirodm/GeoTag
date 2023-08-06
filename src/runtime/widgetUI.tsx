@@ -28,6 +28,7 @@ const DataSourceRenderer = ({ configured, useDataSource, query, widgetId, dataRe
   const [seeFilesHovered, setSeeFilesHovered] = useState(false);
   const [geoTagHovered, setGeoTagHovered] = useState(false);
   const [settingsHovered, setSettingsHovered] = useState(false)
+  const [token, setToken] = useState(null);
 
   const excludedViews = ['AppCredentials', 'SiteName']
 
@@ -109,7 +110,7 @@ const DataSourceRenderer = ({ configured, useDataSource, query, widgetId, dataRe
           <Spacer y={0.5} />
         </div>
         <div className="body">
-          <SharedVariableContext.Provider value={{ credentials, setCredentials, siteName, setSiteName }}>
+          <SharedVariableContext.Provider value={{ credentials, setCredentials, siteName, setSiteName, token, setToken }}>
             {view === 'home' && <HomeView setView={setView} setPrevView={setPrevView} />}
             {view === 'seeFiles' && <SeeFilesView
               useDataSource={useDataSource}
