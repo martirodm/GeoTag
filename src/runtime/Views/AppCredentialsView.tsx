@@ -1,9 +1,10 @@
 import React, { useContext  } from 'react'
 import { SharedVariableContext } from '../widgetUI'
 import '../../assets/stylesheets/home.css'
+import { loadToken } from './TokenFetch'
 
 const AppCredentialsView = ({ setView }) => {
-  const { credentials, setCredentials } = useContext(SharedVariableContext)
+  const { credentials, setCredentials, setToken } = useContext(SharedVariableContext)
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -13,11 +14,15 @@ const AppCredentialsView = ({ setView }) => {
     }))
   }
 
-  const handleSend = (event) => {
+  const handleSend = async (event) => {
     event.preventDefault() // If I don't have it, I get: This item is not published. Please open this item in Experience Builder, then click Publish to publish it.
     // If all fields are filled I console.log()
     const data = `client_id: ${credentials.client_id}\nclient_secret: ${credentials.client_secret}\ntenant_id: ${credentials.tenant_id}`
     console.log(data)
+
+    const fetchedToken = await loadToken(credentials);
+    setToken(fetchedToken);
+    console.log(fetchedToken);
     setView('home')
   }
 
