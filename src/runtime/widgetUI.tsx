@@ -28,10 +28,9 @@ const DataSourceRenderer = ({ configured, useDataSource, query, widgetId, dataRe
   const [seeFilesHovered, setSeeFilesHovered] = useState(false);
   const [geoTagHovered, setGeoTagHovered] = useState(false);
   const [settingsHovered, setSettingsHovered] = useState(false)
-  const [token, setToken] = useState(null);
-
   const excludedViews = ['AppCredentials', 'SiteName']
 
+//---------------Shared Variables---------------------------
   const [credentials, setCredentials] = useState({
     client_id: '',
     client_secret: '',
@@ -41,6 +40,9 @@ const DataSourceRenderer = ({ configured, useDataSource, query, widgetId, dataRe
   const [siteName, setSiteName] = useState({
     site_name: '',
   })
+
+  const [token, setToken] = useState(null)
+//----------------------------------------------------------
 
   if (view === prevView) {
     setPrevView(null)
