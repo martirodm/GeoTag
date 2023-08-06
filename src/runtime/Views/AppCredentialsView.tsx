@@ -1,4 +1,4 @@
-import React, { useContext  } from 'react'
+import React, { useContext } from 'react'
 import { SharedVariableContext } from '../widgetUI'
 import '../../assets/stylesheets/home.css'
 import { loadToken } from './TokenFetch'
@@ -15,16 +15,28 @@ const AppCredentialsView = ({ setView }) => {
   }
 
   const handleSend = async (event) => {
-    event.preventDefault() // If I don't have it, I get: This item is not published. Please open this item in Experience Builder, then click Publish to publish it.
-    // If all fields are filled I console.log()
+    event.preventDefault();
     const data = `client_id: ${credentials.client_id}\nclient_secret: ${credentials.client_secret}\ntenant_id: ${credentials.tenant_id}`
-    console.log(data)
+    console.log(data);
 
-    const fetchedToken = await loadToken(credentials);
-    setToken(fetchedToken);
-    console.log(fetchedToken);
-    setView('home')
+    // Send credentials to Express
+    await fetch("http://localhost:3002/set-credentials", {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(credentials)
+    });
+
+    // Generate token
+    const tokenResponse = await fetch("http://localhost:3002/token");
+    const tokenData = await tokenResponse.json();
+
+    setToken(tokenData.accessToken)
+    console.log(tokenData.accessToken)
+    setView('home');
   }
+
 
   return (
     <div className='Body'>
