@@ -1,24 +1,23 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { SharedVariableContext } from '../widgetUI'
 
 const GeoTagView = () => {
-  const { credentials, siteName, token } = useContext(SharedVariableContext)
+  const { token, siteId } = useContext(SharedVariableContext)
+  console.log(siteId)
 
-  console.log(credentials)
-  console.log(siteName)
-  console.log(token)
-
-  const getData = async () => {
-
-    const dataResponse = await fetch("http://localhost:3002/data", {
-      headers: {
-        'Authorization': `Bearer ${token}`
-      }
-    });
-    const data = await dataResponse.json()
-    console.log(data)
-  }
-  getData();
+  useEffect(() => { //For only executing one time
+    const getData = async () => {
+      const dataResponse = await fetch("http://localhost:3002/display-ff", {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'siteId': siteId
+        }
+      });
+      const data = await dataResponse.json()
+      console.log(data)
+    }
+    getData()
+  }, [])
 
   return <div>GeoTag View</div>
 }

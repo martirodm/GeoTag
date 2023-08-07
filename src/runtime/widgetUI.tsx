@@ -42,6 +42,8 @@ const DataSourceRenderer = ({ configured, useDataSource, query, widgetId, dataRe
   })
 
   const [token, setToken] = useState(null)
+
+  const [siteId, setSiteId] = useState(null)
 //----------------------------------------------------------
 
   if (view === prevView) {
@@ -112,7 +114,7 @@ const DataSourceRenderer = ({ configured, useDataSource, query, widgetId, dataRe
           <Spacer y={0.5} />
         </div>
         <div className="body">
-          <SharedVariableContext.Provider value={{ credentials, setCredentials, siteName, setSiteName, token, setToken }}>
+          <SharedVariableContext.Provider value={{ credentials, setCredentials, siteName, setSiteName, token, setToken, siteId, setSiteId }}>
             {view === 'home' && <HomeView setView={setView} setPrevView={setPrevView} />}
             {view === 'seeFiles' && <SeeFilesView
               useDataSource={useDataSource}

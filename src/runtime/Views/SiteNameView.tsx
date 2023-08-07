@@ -3,7 +3,7 @@ import { SharedVariableContext } from '../widgetUI'
 import '../../assets/stylesheets/home.css'
 
 const SiteNameView = ({ setView }) => {
-  const { siteName, setSiteName } = useContext(SharedVariableContext)
+  const { siteName, setSiteName, token, siteId, setSiteId } = useContext(SharedVariableContext)
 
   const handleChange = (event) => {
     const { name, value } = event.target
@@ -13,9 +13,31 @@ const SiteNameView = ({ setView }) => {
     }))
   }
 
-  const handleSend = (event) => {
+  const handleSend = async (event) => {
     event.preventDefault()
     console.log("Site name: " + siteName.site_name)
+
+    await fetch("http://localhost:3002/set-siteName", {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(siteName)
+    })
+
+    const getSites = await fetch("http://localhost:3002/getSites", {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
+    const sites = await getSites.text()
+    if (sites != null) {
+      setSiteId(sites)
+      console.log("SiteID setted: " + sites)
+    } else {
+      console.log("Site doesn't exist")
+    }
+
     setView('home')
   }
 
