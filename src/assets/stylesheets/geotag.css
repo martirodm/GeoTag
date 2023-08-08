@@ -1,0 +1,14 @@
+.BodyTag {
+    text-align: center;
+    font-weight: bolder;
+    color: whitesmoke;
+    overflow-y: auto;
+    margin-left: 20%;
+    margin-bottom: 20%;
+}
+
+.scrollableList {
+    max-height: 20vh;
+    max-width: 50vh;
+    overflow-y: auto;
+}

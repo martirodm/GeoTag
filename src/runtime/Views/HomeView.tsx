@@ -11,7 +11,7 @@ const StyledButton = styled(Button)({
   marginRight: '7px',
   marginLeft: '7px',
   marginTop: '10px',
-});
+})
 
 
 const HomeView = ({ setView, setPrevView }) => {
