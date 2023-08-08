@@ -1,0 +1,10 @@
+export const FolderIcon = require('./Folder.svg');
+export const FolderIconHover = require('./FolderHover.svg');
+export const FileIcon = require('./File.svg');
+export const FileIconHover = require('./FileHover.svg');
+export const DownloadIcon = require('./Download.svg');
+export const DownloadIconHover = require('./DownloadHover.svg');
+export const SeeIcon = require('./See.svg');
+export const SeeIconHover = require('./SeeHover.svg');
+export const OpenIcon = require('./Open.svg');
+export const OpenIconHover = require('./OpenHover.svg');

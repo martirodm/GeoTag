@@ -1,12 +1,25 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import { SharedVariableContext } from '../widgetUI'
 import '../../assets/stylesheets/home.css'
+import SendIcon from '@mui/icons-material/Send'
+import LoadingButton from '@mui/lab/LoadingButton'
+import CircularProgress from '@mui/material/CircularProgress'
+import { styled } from '@mui/system'
+
+const ColoredCircularProgress = styled(CircularProgress)(({ theme }) => ({
+  color: '#f5f5f5',
+}))
+
+const ColoredLoadingButton = styled(LoadingButton)(({ theme }) => ({
+  color: '#f5f5f5',
+}))
 
 const AppCredentialsView = ({ setView }) => {
   const { credentials, setCredentials, setToken } = useContext(SharedVariableContext)
+  const [loading, setLoading] = useState(false)
 
   const handleChange = (event) => {
-    const { name, value } = event.target;
+    const { name, value } = event.target
     setCredentials((prevData) => ({
       ...prevData,
       [name]: value,
@@ -18,6 +31,8 @@ const AppCredentialsView = ({ setView }) => {
     // If all fields are filled I console.log()
     const data = `client_id: ${credentials.client_id}\nclient_secret: ${credentials.client_secret}\ntenant_id: ${credentials.tenant_id}`
     console.log(data)
+
+    setLoading(true)
 
     // Send credentials to Express
     await fetch("http://localhost:3002/set-credentials", {
@@ -34,6 +49,8 @@ const AppCredentialsView = ({ setView }) => {
 
     setToken(tokenData.accessToken)
     setView('home')
+
+    setLoading(false)
   }
 
 
@@ -73,7 +90,19 @@ const AppCredentialsView = ({ setView }) => {
         <div>
           <br />
           <center>
-            <button type='submit'>Send</button>
+            <ColoredLoadingButton
+              color="success"
+              size="small"
+              loading={loading}
+              loadingPosition="end"
+              endIcon={<SendIcon />}
+              variant="contained"
+              type="submit"
+              loadingIndicator={<ColoredCircularProgress size={20} />}
+              style={{ color: '#f5f5f5' }}
+            >
+              Send
+            </ColoredLoadingButton>
           </center>
         </div>
       </form>
@@ -81,4 +110,4 @@ const AppCredentialsView = ({ setView }) => {
   )
 }
 
-export default AppCredentialsView;
+export default AppCredentialsView

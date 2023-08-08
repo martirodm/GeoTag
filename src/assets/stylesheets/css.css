@@ -45,6 +45,7 @@ h3 {
 .left-bar {
     align-self: center;
     width: 50%;
+    height: 100%;
     grid-area: left-bar;
     /* background-color: red; */
 }
@@ -70,6 +71,8 @@ h3 {
     justify-self: center;
     align-self: center;
     grid-area: body;
+    width: 100%;
+    height: 100%;
     /* background-color: yellow; */
 }
 
@@ -80,4 +83,24 @@ h3 {
     overflow: 100px;
     text-align: center;
     grid-area: body;
+}
+
+.scrollableList {
+    max-height: 30vh;
+    max-width: 55vh;
+    overflow: auto;
+}
+
+.scrollableList .MuiListItem-root {
+    padding: 8px;
+}
+
+.scrollableList .MuiListItemText-primary {
+    font-size: 0.8rem;
+}
+
+.truncate {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
