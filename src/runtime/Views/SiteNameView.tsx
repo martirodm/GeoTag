@@ -15,7 +15,7 @@ const ColoredLoadingButton = styled(LoadingButton)(({ theme }) => ({
 }))
 
 const SiteNameView = ({ setView }) => {
-  const { siteName, setSiteName, token, siteId, setSiteId } = useContext(SharedVariableContext)
+  const { siteName, setSiteName, token, setSiteId, setSiteWebUrl } = useContext(SharedVariableContext)
   const [loading, setLoading] = useState(false)
 
   const handleChange = (event) => {
@@ -43,10 +43,12 @@ const SiteNameView = ({ setView }) => {
         'Authorization': `Bearer ${token}`
       }
     })
-    const sites = await getSites.text()
+    const sites = await getSites.json()
     if (sites != null) {
-      setSiteId(sites)
-      console.log("SiteID setted: " + sites)
+      setSiteId(sites.siteId)
+      console.log("SiteID setted: " + sites.siteId)
+      setSiteWebUrl(sites.siteWebUrl)
+      console.log("SiteWebUrl setted: " + sites.siteWebUrl)
     } else {
       console.log("Site doesn't exist")
     }

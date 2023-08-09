@@ -23,7 +23,7 @@ const DataSourceRenderer = ({ configured, useDataSource, query, widgetId, dataRe
   const [view, setView] = useState('home')
   const [title, setTitle] = useState('Home')
   const [prevView, setPrevView] = useState(null)
-  const [GoBackhovered, setGoBackHovered] = useState(false)
+  const [goBackHovered, setGoBackHovered] = useState(false)
   const [homeHovered, setHomeHovered] = useState(false)
   const [seeFilesHovered, setSeeFilesHovered] = useState(false);
   const [geoTagHovered, setGeoTagHovered] = useState(false);
@@ -44,6 +44,8 @@ const DataSourceRenderer = ({ configured, useDataSource, query, widgetId, dataRe
   const [token, setToken] = useState(null)
 
   const [siteId, setSiteId] = useState(null)
+
+  const [siteWebUrl, setSiteWebUrl] = useState(null)
 //----------------------------------------------------------
 
   if (view === prevView) {
@@ -70,7 +72,7 @@ const DataSourceRenderer = ({ configured, useDataSource, query, widgetId, dataRe
         <div className='goBack'>
           {prevView &&
             <button className='ButtonGoBack' onMouseOver={() => setGoBackHovered(true)} onMouseOut={() => setGoBackHovered(false)} onClick={() => { setView(prevView); setGoBackHovered(false); }}>
-              <img src={String(GoBackhovered ? HoverIcons.GoBackIconHover : WhiteIcons.GoBackIconWhite)} />
+              <img src={String(goBackHovered ? HoverIcons.GoBackIconHover : WhiteIcons.GoBackIconWhite)} />
             </button>
           }
           <Spacer y={0.5} />
@@ -114,7 +116,7 @@ const DataSourceRenderer = ({ configured, useDataSource, query, widgetId, dataRe
           <Spacer y={0.5} />
         </div>
         <div className="body">
-          <SharedVariableContext.Provider value={{ credentials, setCredentials, siteName, setSiteName, token, setToken, siteId, setSiteId }}>
+          <SharedVariableContext.Provider value={{ credentials, setCredentials, siteName, setSiteName, token, setToken, siteId, setSiteId, siteWebUrl, setSiteWebUrl }}>
             {view === 'home' && <HomeView setView={setView} setPrevView={setPrevView} />}
             {view === 'seeFiles' && <SeeFilesView
               useDataSource={useDataSource}
