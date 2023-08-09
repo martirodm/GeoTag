@@ -89,6 +89,8 @@ h3 {
     max-height: 30vh;
     max-width: 55vh;
     overflow: auto;
+    scrollbar-color: whitesmoke #23272f; /* For firefox */
+    scrollbar-width: thin; /* For firefox */
 }
 
 .scrollableList .MuiListItem-root {
@@ -103,4 +105,18 @@ h3 {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+.scrollableList::-webkit-scrollbar { /* For Chromium */
+    width: 10px;
+}
+
+.scrollableList::-webkit-scrollbar-thumb { /* For Chromium */
+    background-color: whitesmoke;
+    border-radius: 6px;
+}
+
+.scrollableList::-webkit-scrollbar-track { /* For Chromium */
+    background-color: #23272f;
+    border-radius: 6px;
 }
