@@ -65,7 +65,7 @@ const HomeView = ({ setView, setPrevView }) => {
     <div className='Body'>
       <div>
         <div>App Credentials:</div>
-        <StyledButton variant="contained" color="success" size="small" onClick={() => { setPrevView('home'); setView('AppCredentials') }}>
+        <StyledButton variant="contained" color="success" size="small" onClick={() => { setPrevView('home'); setView('appCredentials') }}>
           Add
         </StyledButton>
         <StyledButton ref={deleteButtonRef1} variant="contained" color="error" size="small" onClick={() => handleOpen(deleteButtonRef1, 'App Credentials')}>Delete</StyledButton>
@@ -73,7 +73,7 @@ const HomeView = ({ setView, setPrevView }) => {
       <br />
       <div>
         <div>Site Name:</div>
-        <StyledButton variant="contained" color="success" size="small" onClick={() => { setPrevView('home'); setView('SiteName') }}>
+        <StyledButton variant="contained" color="success" size="small" onClick={() => { setPrevView('home'); setView('siteName') }}>
           Add
         </StyledButton>
         <StyledButton ref={deleteButtonRef2} variant="contained" color="error" size="small" onClick={() => handleOpen(deleteButtonRef2, 'Site Name')}>Delete</StyledButton>

@@ -120,3 +120,21 @@ h3 {
     background-color: #23272f;
     border-radius: 6px;
 }
+
+.breadcrumbs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.breadcrumbs button {
+    background: none;
+    border: none;
+    color: #c8c8c8;  /* Adjust as per your theme */
+    font-size: smaller;
+    cursor: pointer;
+}
+
+.breadcrumbs button:hover {
+    text-decoration: none;
+}

@@ -15,6 +15,7 @@ import GeoTagView from './Views/GeoTagView'
 import SettingsView from './Views/SettingsView'
 import AppCredentialsView from './Views/AppCredentialsView'
 import SiteNameView from './Views/SiteNameView'
+import AddTagView from './Views/AddTagView'
 //------------------------------------------------------------
 
 export const SharedVariableContext = createContext(null);
@@ -28,7 +29,7 @@ const DataSourceRenderer = ({ configured, useDataSource, query, widgetId, dataRe
   const [seeFilesHovered, setSeeFilesHovered] = useState(false);
   const [geoTagHovered, setGeoTagHovered] = useState(false);
   const [settingsHovered, setSettingsHovered] = useState(false)
-  const excludedViews = ['AppCredentials', 'SiteName']
+  const excludedViews = ['appCredentials', 'siteName', 'addTag']
 
 //---------------Shared Variables---------------------------
   const [credentials, setCredentials] = useState({
@@ -78,7 +79,7 @@ const DataSourceRenderer = ({ configured, useDataSource, query, widgetId, dataRe
           <Spacer y={0.5} />
         </div>
         <div className="left-bar">
-          {view === 'home' || view === 'AppCredentials' || view === 'SiteName'
+          {view === 'home' || view === 'appCredentials' || view === 'siteName'
             ? <button className='ButtonSelected' onClick={() => { if (!excludedViews.includes(view) && (view !== 'home')) setPrevView(view); setView('home'); setTitle('Home') }}>
               <img src={String(BlackIcons.HomeIconBlack)} /> <br />
             </button>
@@ -96,7 +97,7 @@ const DataSourceRenderer = ({ configured, useDataSource, query, widgetId, dataRe
             </button>
           }
           <Spacer y={0.5} />
-          {view === 'geoTag'
+          {view === 'geoTag' || view === 'addTag'
             ? <button className='ButtonSelected' onClick={() => { if (view !== 'geoTag') setPrevView(view); setView('geoTag'); setTitle('GeoTag File') }}>
               <img src={String(BlackIcons.GeoTagIconBlack)} /> <br />
             </button>
@@ -125,10 +126,11 @@ const DataSourceRenderer = ({ configured, useDataSource, query, widgetId, dataRe
               queryCount
               dataRender={dataRender}
             />}
-            {view === 'geoTag' && <GeoTagView />}
+            {view === 'geoTag' && <GeoTagView setView={setView} setPrevView={setPrevView} />}
             {view === 'settings' && <SettingsView />}
-            {view === 'AppCredentials' && <AppCredentialsView setView={setView} />}
-            {view === 'SiteName' && <SiteNameView setView={setView} />}
+            {view === 'appCredentials' && <AppCredentialsView setView={setView} />}
+            {view === 'siteName' && <SiteNameView setView={setView} />}
+            {view === 'addTag' && <AddTagView setView={setView} />}
           </SharedVariableContext.Provider>
         </div>
       </div>
