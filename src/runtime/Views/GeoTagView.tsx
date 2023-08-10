@@ -11,20 +11,21 @@ import '../../assets/stylesheets/css.css'
 
 import * as FileExpIcons from '../../assets/images/FileExplorer/indexFileExp'
 
-const FolderListItem = ({ folder }) => {
+const FolderListItem = ({ folder, setSelectedFolderId, setSelectedFolderName }) => {
   const [openHovered, setOpenHovered] = useState(false)
   const [folderHovered, setFolderHovered] = useState(false)
 
   return (
     <ListItem secondaryAction={
       <Tooltip title="Open Folder" disableInteractive>
-        <IconButton edge="end" aria-label="Open" onClick={() => window.open(folder.url, '_blank')} onMouseEnter={() => setOpenHovered(true)} onMouseLeave={() => setOpenHovered(false)}>
+        <IconButton edge="end" aria-label="Open" onClick={(e) => { e.stopPropagation(); window.open(folder.url, '_blank') }} onMouseEnter={() => setOpenHovered(true)} onMouseLeave={() => setOpenHovered(false)}>
           <img src={openHovered ? FileExpIcons.OpenIconHover : FileExpIcons.OpenIcon} />
         </IconButton>
       </Tooltip>
     }
+      onClick={() => { setSelectedFolderId(folder.id), setSelectedFolderName(folder.name) }}
       onMouseEnter={() => setFolderHovered(true)} onMouseLeave={() => setFolderHovered(false)}
-      style={{ backgroundColor: folderHovered ? '#161b22' : 'transparent' }}
+      style={{ backgroundColor: folderHovered ? '#161b22' : 'transparent', cursor: 'pointer' }}
       key={folder.id}>
 
       <ListItemIcon style={{ marginRight: '-20px', marginLeft: '-10px' }}>
@@ -44,7 +45,7 @@ const FolderListItem = ({ folder }) => {
   )
 }
 
-const FileListItem = ({ file }) => {
+const FileListItem = ({ file, setView, setPrevView }) => {
   const [seeHovered, setSeeHovered] = useState(false)
   const [openHovered, setOpenHovered] = useState(false)
   const [fileHovered, setFileHovered] = useState(false)
@@ -53,20 +54,30 @@ const FileListItem = ({ file }) => {
     <ListItem secondaryAction={
       <div>
         <Tooltip title="Preview File" disableInteractive>
-          <IconButton edge="end" aria-label="See" onClick={() => window.open(file.previewurl, '_blank')} onMouseEnter={() => setSeeHovered(true)} onMouseLeave={() => setSeeHovered(false)}>
+          <IconButton edge="end" aria-label="See" onClick={(e) => { e.stopPropagation(); window.open(file.previewurl, '_blank') }} onMouseEnter={() => setSeeHovered(true)} onMouseLeave={() => setSeeHovered(false)}>
             <img src={seeHovered ? FileExpIcons.SeeIconHover : FileExpIcons.SeeIcon} />
           </IconButton>
         </Tooltip>
 
         {(file.icon === "dwg" || file.icon === "url") ?
           <Tooltip title="Download File" disableInteractive>
-            <IconButton edge="end" aria-label="download" onClick={() => window.location.href = file.downloadurl} onMouseEnter={() => setOpenHovered(true)} onMouseLeave={() => setOpenHovered(false)}>
+            <IconButton edge="end" aria-label="download" onClick={(e) => {
+              e.stopPropagation()
+              const tempLink = document.createElement("a")
+              tempLink.href = file.downloadurl
+              tempLink.setAttribute("download", "")
+              tempLink.setAttribute("target", "_blank")
+              document.body.appendChild(tempLink)
+              tempLink.click()
+              document.body.removeChild(tempLink)
+
+            }} onMouseEnter={() => setOpenHovered(true)} onMouseLeave={() => setOpenHovered(false)}>
               <img src={openHovered ? FileExpIcons.DownloadIconHover : FileExpIcons.DownloadIcon} />
             </IconButton>
           </Tooltip>
           :
           <Tooltip title="Open File" disableInteractive>
-            <IconButton edge="end" aria-label="open" onClick={() => window.open(file.downloadurl, '_blank')} onMouseEnter={() => setOpenHovered(true)} onMouseLeave={() => setOpenHovered(false)}>
+            <IconButton edge="end" aria-label="open" onClick={(e) => { e.stopPropagation(); window.open(file.downloadurl, '_blank') }} onMouseEnter={() => setOpenHovered(true)} onMouseLeave={() => setOpenHovered(false)}>
               <img src={openHovered ? FileExpIcons.OpenIconHover : FileExpIcons.OpenIcon} />
             </IconButton>
           </Tooltip>
@@ -74,6 +85,7 @@ const FileListItem = ({ file }) => {
 
       </div>
     }
+      onClick={() => { setPrevView('geoTag'); setView('addTag') }}
       onMouseEnter={() => setFileHovered(true)} onMouseLeave={() => setFileHovered(false)}
       style={{ backgroundColor: fileHovered ? '#161b22' : 'transparent' }}
       key={file.id}>
@@ -95,18 +107,22 @@ const FileListItem = ({ file }) => {
   )
 }
 
-const GeoTagView = () => {
+const GeoTagView = ({ setView, setPrevView }) => {
   const { token, siteId, siteWebUrl } = useContext(SharedVariableContext)
-  const [loading, setLoading] = useState(true);
-  const [folders, setFolders] = useState([]);
-  const [files, setFiles] = useState([]);
+  const [loading, setLoading] = useState(true)
+  const [folders, setFolders] = useState([])
+  const [files, setFiles] = useState([])
+  const [selectedFolderId, setSelectedFolderId] = useState(null)
+  const [selectedFolderName, setSelectedFolderName] = useState(null)
+  const [, forceUpdate] = useState(0)
+  const [historyFolders, setHistoryFolders] = useState([])
 
   function getValueInsideBraces(str) {
-    const match = str.match(/{(.*?)}/);
+    const match = str.match(/{(.*?)}/)
     if (match) {
-      return match[1];
+      return match[1]
     }
-    return null;
+    return null
   }
 
   useEffect(() => { //For only executing one time
@@ -116,51 +132,124 @@ const GeoTagView = () => {
       let filesData = []
       let siteUrlName: string
 
-      const dataResponse = await fetch("http://localhost:3002/display-ff", {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'siteId': siteId
-        }
-      })
-      const data = await dataResponse.json()
-      dataFiles = data.value
+      if (selectedFolderId) {
+        setLoading(true)
+        setHistoryFolders(prev => {
+          // Check if the folder is already in the history.
+          const existingIndex = prev.findIndex(folder => folder.id === selectedFolderId)
 
-      const parts = siteWebUrl.split("/sites/")
-      if (parts.length > 1) {
-        siteUrlName = parts[1].split("/")[0]
-        console.log(siteUrlName)
+          // If found, slice the array to that point; otherwise, add to the history.
+          return existingIndex !== -1 ? prev.slice(0, existingIndex + 1) : [...prev, { id: selectedFolderId, name: selectedFolderName }]
+        })
+        const dataResponse = await fetch("http://localhost:3002/display-subff", {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'siteId': siteId,
+            'folderId': selectedFolderId,
+          }
+        })
+        const data = await dataResponse.json()
+        dataFiles = data.value
+
+        dataFiles.forEach(file => {
+          if (file.folder != undefined && !file.webUrl.includes("_layouts")) {
+            console.log("---------Folder----------")
+            console.log(getValueInsideBraces(file.eTag))
+            console.log(file.name)
+            console.log(file.webUrl)
+
+            const folderData = {
+              id: getValueInsideBraces(file.eTag),
+              name: file.name,
+              url: file.webUrl
+            }
+            foldersData.push(folderData)
+
+          } else if (file.file != undefined) {
+            console.log("---------File----------")
+            console.log(getValueInsideBraces(file.eTag))
+            console.log(file.name)
+            console.log(file.webUrl)
+
+            /* let newUrl = "/sites/" + siteUrlName + "/Shared%20Documents/" + encodeURIComponent(file.fields.FileLeafRef.trim())
+            let previewUrl = siteWebUrl + "/Shared%20Documents/Forms/AllItems.aspx?id=" + newUrl + "&parent=/sites/" + siteUrlName + "/Shared%20Documents" */
+
+            let fileData = {
+              id: getValueInsideBraces(file.eTag),
+              name: file.name,
+              downloadurl: file.webUrl,
+              previewurl: "",
+              icon: "",
+              labels: ""
+            }
+            filesData.push(fileData)
+          }
+          setFolders(foldersData)
+          setFiles(filesData)
+          forceUpdate(n => n + 1)
+          setLoading(false);
+        })
+      } else {
+
+        const dataResponse = await fetch("http://localhost:3002/display-ff", {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'siteId': siteId
+          }
+        })
+        const data = await dataResponse.json()
+        dataFiles = data.value
+
+        const parts = siteWebUrl.split("/sites/")
+        if (parts.length > 1) {
+          siteUrlName = parts[1].split("/")[0]
+        }
+
+        dataFiles.forEach(file => {
+          if (file.fields.ContentType == "Folder" && !file.webUrl.includes("_layouts")) {
+            const folderData = {
+              id: getValueInsideBraces(file.eTag),
+              name: file.fields.FileLeafRef,
+              url: file.webUrl
+            }
+            foldersData.push(folderData)
+
+          } else if (file.fields.ContentType == "Document") {
+            let newUrl = "/sites/" + siteUrlName + "/Shared%20Documents/" + encodeURIComponent(file.fields.FileLeafRef.trim())
+            let previewUrl = siteWebUrl + "/Shared%20Documents/Forms/AllItems.aspx?id=" + newUrl + "&parent=/sites/" + siteUrlName + "/Shared%20Documents"
+
+            let fileData = {
+              id: getValueInsideBraces(file.eTag),
+              name: file.fields.FileLeafRef,
+              downloadurl: file.webUrl,
+              previewurl: previewUrl,
+              icon: file.fields.DocIcon,
+              labels: file.fields.TaxKeyword ? file.fields.TaxKeyword.map(file2 => file2.Label) : []
+            }
+            filesData.push(fileData)
+          }
+        })
+        setFolders(foldersData)
+        setFiles(filesData)
+        setLoading(false);
+
       }
-
-      dataFiles.forEach(file => {
-        if (file.fields.ContentType == "Folder" && !file.webUrl.includes("_layouts")) {
-          const folderData = {
-            id: getValueInsideBraces(file.eTag),
-            name: file.fields.FileLeafRef,
-            url: file.webUrl
-          }
-          foldersData.push(folderData)
-
-        } else if (file.fields.ContentType == "Document") {
-          let newUrl = "/sites/" + siteUrlName + "/Shared%20Documents/" + encodeURIComponent(file.fields.FileLeafRef.trim())
-          let previewUrl = siteWebUrl + "/Shared%20Documents/Forms/AllItems.aspx?id=" + newUrl + "&parent=/sites/" + siteUrlName + "/Shared%20Documents"
-
-          let fileData = {
-            id: getValueInsideBraces(file.eTag),
-            name: file.fields.FileLeafRef,
-            downloadurl: file.webUrl,
-            previewurl: previewUrl,
-            icon: file.fields.DocIcon,
-            labels: file.fields.TaxKeyword ? file.fields.TaxKeyword.map(file2 => file2.Label) : []
-          }
-          filesData.push(fileData)
-        }
-      })
-      setFolders(foldersData)
-      setFiles(filesData)
-      setLoading(false);
+      console.log("History of folders: " + historyFolders)
     }
     getData()
-  }, [])
+  }, [selectedFolderId]) //If selectedFolderId changes execute useEffect again
+
+  const jumpToFolder = (index) => {
+    const folder = historyFolders[index]
+    setSelectedFolderId(folder.id) // Trigger fetching the folder's content
+    setHistoryFolders(prev => prev.slice(0, index + 1)) // Update the breadcrumb path
+  }
+
+  const goToHome = () => {
+    setSelectedFolderId(null); // Or whatever represents the top level in your system
+    setHistoryFolders([]);     // Reset the breadcrumb history
+  };
+
 
   if (loading) {
     return (
@@ -175,17 +264,37 @@ const GeoTagView = () => {
           ))}
         </List>
       </div>
-    );
+    )
   }
 
   return (
     <div className='body'>
+
+      <div className="breadcrumbs">
+        {(selectedFolderId || historyFolders.length > 0) && (
+          <>
+            <button onClick={goToHome}>Home</button> /
+          </>
+        )}
+        {historyFolders.map((folder, index) => (
+          <span key={folder.id}>
+            <button
+              onClick={() => jumpToFolder(index)}
+              style={index === historyFolders.length - 1 ? { color: '#f5f5f5' } : {}}
+            >
+              {folder.name}
+            </button>
+            {index < historyFolders.length - 1 && ' / '}
+          </span>
+        ))}
+      </div>
+
       <List className='scrollableList'>
         {folders.map((folder) => (
-          <FolderListItem folder={folder} />
+          <FolderListItem folder={folder} setSelectedFolderId={setSelectedFolderId} setSelectedFolderName={setSelectedFolderName} />
         ))}
         {files.map((file) => (
-          <FileListItem file={file} />
+          <FileListItem file={file} setView={setView} setPrevView={setPrevView} />
         ))}
       </List>
     </div>
@@ -196,7 +305,7 @@ const SkeletonListItem = () => {
   return (
     <ListItem secondaryAction={
       <IconButton>
-        <div style={{ width: 20, height: 20, overflow: 'hidden'}}>
+        <div style={{ width: 20, height: 20, overflow: 'hidden' }}>
           <Skeleton variant="rectangular" width="100%" height="100%" style={{ backgroundColor: '#c8c8c8' }} />
         </div>
       </IconButton>
