@@ -1,5 +1,5 @@
 export async function loadToken(credentials) {
-  // Send credentials to Express
+  // Send credentials to Express.
   await fetch("http://localhost:3002/set-credentials", {
     method: 'POST',
     headers: {

@@ -30,7 +30,7 @@ const DataSourceRenderer = ({ configured, useDataSource, query, widgetId, dataRe
   const [settingsHovered, setSettingsHovered] = useState(false)
   const excludedViews = ['AppCredentials', 'SiteName']
 
-//---------------Shared Variables---------------------------
+  // --------------- Shared Variables ---------------------------
   const [credentials, setCredentials] = useState({
     client_id: '',
     client_secret: '',
@@ -42,12 +42,13 @@ const DataSourceRenderer = ({ configured, useDataSource, query, widgetId, dataRe
   })
 
   const [token, setToken] = useState(null)
-//----------------------------------------------------------
+  // ----------------------------------------------------------
 
   if (view === prevView) {
     setPrevView(null)
   }
 
+  // If the date source is not configure, add an image with instructions.
   if (!configured) {
     return (
       <div className="InsertDataSource">
@@ -58,7 +59,6 @@ const DataSourceRenderer = ({ configured, useDataSource, query, widgetId, dataRe
         </div>
       </div>
     )
-
   }
 
   return (

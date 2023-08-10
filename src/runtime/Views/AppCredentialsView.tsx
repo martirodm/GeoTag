@@ -4,7 +4,7 @@ import '../../assets/stylesheets/home.css'
 import { loadToken } from './TokenFetch'
 
 const AppCredentialsView = ({ setView }) => {
-  const { credentials, setCredentials, setToken } = useContext(SharedVariableContext)
+  const { credentials, setCredentials, setToken } = useContext(SharedVariableContext)  // Shared variable from widgetUI.tsx.
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -19,16 +19,16 @@ const AppCredentialsView = ({ setView }) => {
     const data = `client_id: ${credentials.client_id}\nclient_secret: ${credentials.client_secret}\ntenant_id: ${credentials.tenant_id}`
     console.log(data);
 
-    // Send credentials to Express
+    // Send credentials to Express.
     await fetch("http://localhost:3002/set-credentials", {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(credentials)
+      body: JSON.stringify(credentials)  // Convert "credentials" to json string.
     });
 
-    // Generate token
+    // Generate token.
     const tokenResponse = await fetch("http://localhost:3002/token");
     const tokenData = await tokenResponse.json();
 
@@ -36,7 +36,6 @@ const AppCredentialsView = ({ setView }) => {
     console.log(tokenData.accessToken)
     setView('home');
   }
-
 
   return (
     <div className='Body'>
