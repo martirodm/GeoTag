@@ -49,6 +49,7 @@ const FileListItem = ({ file, setView, setPrevView }) => {
   const [seeHovered, setSeeHovered] = useState(false)
   const [openHovered, setOpenHovered] = useState(false)
   const [fileHovered, setFileHovered] = useState(false)
+  const downloadIcons = ["dwg","url","xlsx", "pptx", "vsdx", "docx"]
 
   return (
     <ListItem secondaryAction={
@@ -59,7 +60,7 @@ const FileListItem = ({ file, setView, setPrevView }) => {
           </IconButton>
         </Tooltip>
 
-        {(file.icon === "dwg" || file.icon === "url") ?
+        {(downloadIcons.includes(file.icon)) ?
           <Tooltip title="Download File" disableInteractive>
             <IconButton edge="end" aria-label="download" onClick={(e) => {
               e.stopPropagation()
