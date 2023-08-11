@@ -132,8 +132,8 @@ const GeoTagView = ({ setView, setPrevView }) => {
       let filesData = []
       let siteUrlName: string
 
+      setLoading(true)
       if (selectedFolderId) {
-        setLoading(true)
         setHistoryFolders(prev => {
           // Check if the folder is already in the history.
           const existingIndex = prev.findIndex(folder => folder.id === selectedFolderId)
@@ -141,100 +141,54 @@ const GeoTagView = ({ setView, setPrevView }) => {
           // If found, slice the array to that point; otherwise, add to the history.
           return existingIndex !== -1 ? prev.slice(0, existingIndex + 1) : [...prev, { id: selectedFolderId, name: selectedFolderName }]
         })
-        const dataResponse = await fetch("http://localhost:3002/display-subff", {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'siteId': siteId,
-            'folderId': selectedFolderId,
-          }
-        })
-        const data = await dataResponse.json()
-        dataFiles = data.value
-
-        dataFiles.forEach(file => {
-          if (file.folder != undefined && !file.webUrl.includes("_layouts")) {
-            console.log("---------Folder----------")
-            console.log(getValueInsideBraces(file.eTag))
-            console.log(file.name)
-            console.log(file.webUrl)
-
-            const folderData = {
-              id: getValueInsideBraces(file.eTag),
-              name: file.name,
-              url: file.webUrl
-            }
-            foldersData.push(folderData)
-
-          } else if (file.file != undefined) {
-            console.log("---------File----------")
-            console.log(getValueInsideBraces(file.eTag))
-            console.log(file.name)
-            console.log(file.webUrl)
-
-            /* let newUrl = "/sites/" + siteUrlName + "/Shared%20Documents/" + encodeURIComponent(file.fields.FileLeafRef.trim())
-            let previewUrl = siteWebUrl + "/Shared%20Documents/Forms/AllItems.aspx?id=" + newUrl + "&parent=/sites/" + siteUrlName + "/Shared%20Documents" */
-
-            let fileData = {
-              id: getValueInsideBraces(file.eTag),
-              name: file.name,
-              downloadurl: file.webUrl,
-              previewurl: "",
-              icon: "",
-              labels: ""
-            }
-            filesData.push(fileData)
-          }
-          setFolders(foldersData)
-          setFiles(filesData)
-          forceUpdate(n => n + 1)
-          setLoading(false);
-        })
-      } else {
-
-        const dataResponse = await fetch("http://localhost:3002/display-ff", {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'siteId': siteId
-          }
-        })
-        const data = await dataResponse.json()
-        dataFiles = data.value
-
-        const parts = siteWebUrl.split("/sites/")
-        if (parts.length > 1) {
-          siteUrlName = parts[1].split("/")[0]
-        }
-
-        dataFiles.forEach(file => {
-          if (file.fields.ContentType == "Folder" && !file.webUrl.includes("_layouts")) {
-            const folderData = {
-              id: getValueInsideBraces(file.eTag),
-              name: file.fields.FileLeafRef,
-              url: file.webUrl
-            }
-            foldersData.push(folderData)
-
-          } else if (file.fields.ContentType == "Document") {
-            let newUrl = "/sites/" + siteUrlName + "/Shared%20Documents/" + encodeURIComponent(file.fields.FileLeafRef.trim())
-            let previewUrl = siteWebUrl + "/Shared%20Documents/Forms/AllItems.aspx?id=" + newUrl + "&parent=/sites/" + siteUrlName + "/Shared%20Documents"
-
-            let fileData = {
-              id: getValueInsideBraces(file.eTag),
-              name: file.fields.FileLeafRef,
-              downloadurl: file.webUrl,
-              previewurl: previewUrl,
-              icon: file.fields.DocIcon,
-              labels: file.fields.TaxKeyword ? file.fields.TaxKeyword.map(file2 => file2.Label) : []
-            }
-            filesData.push(fileData)
-          }
-        })
-        setFolders(foldersData)
-        setFiles(filesData)
-        setLoading(false);
-
       }
-      console.log("History of folders: " + historyFolders)
+
+      const dataResponse = await fetch("http://localhost:3002/display-ff", {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'siteId': siteId,
+          'folderId': selectedFolderId
+        }
+      })
+      const data = await dataResponse.json()
+      dataFiles = data.value
+
+      const parts = siteWebUrl.split("/sites/")
+      if (parts.length > 1) {
+        siteUrlName = parts[1].split("/")[0]
+      }
+
+      dataFiles.forEach(file => {
+        if (file.listItem.fields.ContentType == "Folder" && file.package?.type != "oneNote") {
+          const folderData = {
+            id: getValueInsideBraces(file.eTag),
+            name: file.listItem.fields.FileLeafRef,
+            url: file.listItem.webUrl
+          }
+          foldersData.push(folderData)
+
+        } else if (file.listItem.fields.ContentType == "Document") {
+          let parsedUrl = new URL(file.listItem.webUrl)
+          let newUrl = parsedUrl.pathname
+          let parts = newUrl.split('/')
+          parts.pop()
+          let newUrl2 = parts.join('/')
+          let previewUrl = siteWebUrl + "/Shared%20Documents/Forms/AllItems.aspx?id=" + newUrl + "&parent=" + newUrl2
+          let fileData = {
+            id: getValueInsideBraces(file.eTag),
+            name: file.listItem.fields.FileLeafRef,
+            downloadurl: file.listItem.webUrl,
+            previewurl: previewUrl,
+            icon: file.listItem.fields.DocIcon,
+            labels: file.listItem.fields.Taxonomy ? file.listItem.fields.Taxonomy.map(file2 => file2.Label) : []
+          }
+          filesData.push(fileData)
+        }
+      })
+      setFolders(foldersData)
+      setFiles(filesData)
+      forceUpdate(n => n + 1)
+      setLoading(false)
     }
     getData()
   }, [selectedFolderId]) //If selectedFolderId changes execute useEffect again
