@@ -12,6 +12,7 @@ import '../../assets/stylesheets/css.css'
 import * as FileExpIcons from '../../assets/images/FileExplorer/indexFileExp'
 
 const FolderListItem = ({ folder, setSelectedFolderId, setSelectedFolderName }) => {
+  const { setFolderId } = useContext(SharedVariableContext)
   const [openHovered, setOpenHovered] = useState(false)
   const [folderHovered, setFolderHovered] = useState(false)
 
@@ -23,7 +24,7 @@ const FolderListItem = ({ folder, setSelectedFolderId, setSelectedFolderName }) 
         </IconButton>
       </Tooltip>
     }
-      onClick={() => { setSelectedFolderId(folder.id), setSelectedFolderName(folder.name) }}
+      onClick={() => { setFolderId(folder.id), setSelectedFolderId(folder.id), setSelectedFolderName(folder.name) }}
       onMouseEnter={() => setFolderHovered(true)} onMouseLeave={() => setFolderHovered(false)}
       style={{ backgroundColor: folderHovered ? '#161b22' : 'transparent', cursor: 'pointer' }}
       key={folder.id}>
@@ -46,10 +47,11 @@ const FolderListItem = ({ folder, setSelectedFolderId, setSelectedFolderName }) 
 }
 
 const FileListItem = ({ file, setView, setPrevView }) => {
+  const { setFileId } = useContext(SharedVariableContext)
   const [seeHovered, setSeeHovered] = useState(false)
   const [openHovered, setOpenHovered] = useState(false)
   const [fileHovered, setFileHovered] = useState(false)
-  const downloadIcons = ["dwg","url","xlsx", "pptx", "vsdx", "docx"]
+  const downloadIcons = ["dwg", "url", "xlsx", "pptx", "vsdx", "docx"]
 
   return (
     <ListItem secondaryAction={
@@ -86,9 +88,9 @@ const FileListItem = ({ file, setView, setPrevView }) => {
 
       </div>
     }
-      onClick={() => { setPrevView('geoTag'); setView('addTag') }}
+      onClick={() => { setFileId(file.id), setPrevView('geoTag'); setView('addTag') }}
       onMouseEnter={() => setFileHovered(true)} onMouseLeave={() => setFileHovered(false)}
-      style={{ backgroundColor: fileHovered ? '#161b22' : 'transparent' }}
+      style={{ backgroundColor: fileHovered ? '#161b22' : 'transparent', cursor: 'pointer' }}
       key={file.id}>
 
       <ListItemIcon style={{ marginRight: '-20px', marginLeft: '-10px' }}>
@@ -109,7 +111,7 @@ const FileListItem = ({ file, setView, setPrevView }) => {
 }
 
 const GeoTagView = ({ setView, setPrevView }) => {
-  const { token, siteId, siteWebUrl } = useContext(SharedVariableContext)
+  const { token, siteId, siteWebUrl,folderFinalId, setFolderFinalId,folderId, setFolderId } = useContext(SharedVariableContext)
   const [loading, setLoading] = useState(true)
   const [folders, setFolders] = useState([])
   const [files, setFiles] = useState([])
@@ -134,6 +136,14 @@ const GeoTagView = ({ setView, setPrevView }) => {
       let siteUrlName: string
 
       setLoading(true)
+
+      console.log("final id: "+folderFinalId);
+      console.log("id: "+folderId);
+      if (folderFinalId){
+        setSelectedFolderId(folderFinalId)
+        setFolderId(null)
+      }
+
       if (selectedFolderId) {
         setHistoryFolders(prev => {
           // Check if the folder is already in the history.
@@ -188,6 +198,7 @@ const GeoTagView = ({ setView, setPrevView }) => {
       })
       setFolders(foldersData)
       setFiles(filesData)
+      setFolderFinalId(null)
       forceUpdate(n => n + 1)
       setLoading(false)
     }
