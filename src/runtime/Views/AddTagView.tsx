@@ -1,7 +1,9 @@
-import React from 'react'
+import React, { useContext, useEffect, useState } from 'react'
+import { SharedVariableContext } from '../widgetUI'
 
 const AddTagView = ({ setView }) => {
-  return <div>AddTag View</div>
+  const { folderId, fileId } = useContext(SharedVariableContext)
+  return <div>Folder:{folderId},File:{fileId}</div>
 }
 
 export default AddTagView
