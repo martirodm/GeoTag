@@ -53,6 +53,8 @@ const DataSourceRenderer = ({ configured, useDataSource, query, widgetId, dataRe
   const [folderFinalId, setFolderFinalId] = useState(null)
 
   const [fileId, setFileId] = useState(null)
+
+  const [fileName, setFileName] = useState(null)
   // ----------------------------------------------------------
 
   if (view === prevView) {
@@ -79,7 +81,7 @@ const DataSourceRenderer = ({ configured, useDataSource, query, widgetId, dataRe
         <h3>{title}</h3>
         <div className='goBack'>
           {prevView &&
-            <button className='ButtonGoBack' onMouseOver={() => setGoBackHovered(true)} onMouseOut={() => setGoBackHovered(false)} onClick={() => {if (prevView == 'geoTag'){setFolderFinalId(folderId)} setView(prevView); setGoBackHovered(false); }}>
+            <button className='ButtonGoBack' onMouseOver={() => setGoBackHovered(true)} onMouseOut={() => setGoBackHovered(false)} onClick={() => { if (prevView == 'geoTag') { setFolderFinalId(folderId) } setView(prevView); setGoBackHovered(false); }}>
               <img src={String(goBackHovered ? HoverIcons.GoBackIconHover : WhiteIcons.GoBackIconWhite)} />
             </button>
           }
@@ -124,7 +126,7 @@ const DataSourceRenderer = ({ configured, useDataSource, query, widgetId, dataRe
           <Spacer y={0.5} />
         </div>
         <div className="body">
-          <SharedVariableContext.Provider value={{ credentials, setCredentials, siteName, setSiteName, token, setToken, siteId, setSiteId, siteWebUrl, setSiteWebUrl, folderId, setFolderId, folderFinalId, setFolderFinalId, fileId, setFileId }}>
+          <SharedVariableContext.Provider value={{ credentials, setCredentials, siteName, setSiteName, token, setToken, siteId, setSiteId, siteWebUrl, setSiteWebUrl, folderId, setFolderId, folderFinalId, setFolderFinalId, fileId, setFileId, fileName, setFileName }}>
             {view === 'home' && <HomeView setView={setView} setPrevView={setPrevView} />}
             {view === 'seeFiles' && <SeeFilesView
               useDataSource={useDataSource}
@@ -137,7 +139,14 @@ const DataSourceRenderer = ({ configured, useDataSource, query, widgetId, dataRe
             {view === 'settings' && <SettingsView />}
             {view === 'appCredentials' && <AppCredentialsView setView={setView} />}
             {view === 'siteName' && <SiteNameView setView={setView} />}
-            {view === 'addTag' && <AddTagView setView={setView} />}
+            {view === 'addTag' && <AddTagView
+              setView={setView}
+              useDataSource={useDataSource}
+              query={query}
+              widgetId={widgetId}
+              queryCount
+              dataRender={dataRender}
+            />}
           </SharedVariableContext.Provider>
         </div>
       </div>

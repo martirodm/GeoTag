@@ -47,7 +47,7 @@ const FolderListItem = ({ folder, setSelectedFolderId, setSelectedFolderName }) 
 }
 
 const FileListItem = ({ file, setView, setPrevView }) => {
-  const { setFileId } = useContext(SharedVariableContext)
+  const { setFileId, setFileName } = useContext(SharedVariableContext)
   const [seeHovered, setSeeHovered] = useState(false)
   const [openHovered, setOpenHovered] = useState(false)
   const [fileHovered, setFileHovered] = useState(false)
@@ -88,7 +88,7 @@ const FileListItem = ({ file, setView, setPrevView }) => {
 
       </div>
     }
-      onClick={() => { setFileId(file.id), setPrevView('geoTag'); setView('addTag') }}
+      onClick={() => { setFileId(file.id), setFileName(file.name), setPrevView('geoTag'); setView('addTag') }}
       onMouseEnter={() => setFileHovered(true)} onMouseLeave={() => setFileHovered(false)}
       style={{ backgroundColor: fileHovered ? '#161b22' : 'transparent', cursor: 'pointer' }}
       key={file.id}>
