@@ -5,7 +5,7 @@ import '../assets/stylesheets/css.css'
 
 const { useState, useEffect, useRef } = React
 
-export default function Widget (props: AllWidgetProps<{}>) { // Function Component.
+export default function Widget(props: AllWidgetProps<{}>) { // Function Component.
   const [query, setQuery] = useState<FeatureLayerQueryParams>(null) // The inicial value of query variable is null.
   const nameRef = useRef<HTMLInputElement>(null) // References the HTML input element, which basically is the pop up.
 
@@ -45,44 +45,44 @@ export default function Widget (props: AllWidgetProps<{}>) { // Function Compone
         {
           ds && ds.getStatus() === DataSourceStatus.Loaded
             ? ( // If the DataSource exists and is active:
-                ds.getRecords().length > 0 // If there are any records available:
-                  ? (() => {
-                      // Group records by unique identifier.
-                      const groupedRecords = ds.getRecords().reduce((acc, record) => { // acc = unique identifier; reduce function is to group by the uniqueIdentifier.
-                        const rowData = record.getData()
-                        const uniqueIdentifier = rowData.OBJECTID // I select the OBJECTID from rowData array.
+              ds.getRecords().length > 0 // If there are any records available:
+                ? (() => {
+                  // Group records by unique identifier.
+                  const groupedRecords = ds.getRecords().reduce((acc, record) => { // acc = unique identifier; reduce function is to group by the uniqueIdentifier.
+                    const rowData = record.getData()
+                    const uniqueIdentifier = rowData.OBJECTID // I select the OBJECTID from rowData array.
 
-                        if (!acc[uniqueIdentifier]) { // If I don't have the "uniqueIdentifier":
-                          acc[uniqueIdentifier] = [] // I set is an empty array.
-                        }
+                    if (!acc[uniqueIdentifier]) { // If I don't have the "uniqueIdentifier":
+                      acc[uniqueIdentifier] = [] // I set is an empty array.
+                    }
 
-                        acc[uniqueIdentifier].push(rowData)
-                        return acc
-                      }, {})
+                    acc[uniqueIdentifier].push(rowData)
+                    return acc
+                  }, {})
 
-                      return (
-                        <>
-                          {Object.keys(groupedRecords).map((identifier) => (
-                            <div key={identifier}>
-                              <div>
-                                {groupedRecords[identifier].map((recordData, index) => {
-                                  const filteredData = Object.fromEntries(Object.entries(recordData).filter(([key, value]) => value !== null && value !== ''))
-                                  return (
-                                    <div key={index}>
-                                      {Object.keys(filteredData).map((keyName, buttonIndex) => ( // Map over keys of filteredData
-                                        <button key={buttonIndex} onClick={() => console.log(filteredData[keyName])}>{keyName}</button>
-                                      ))}
-                                    </div>
-                                  )
-                                })}
-                              </div>
-                            </div>
-                          ))}
-                        </>
-                      )
-                    })()
-                  : <div>Please select a PopUp</div> // If there're not records.
-              )
+                  return (
+                    <>
+                      {Object.keys(groupedRecords).map((identifier) => (
+                        <div key={identifier}>
+                          <div>
+                            {groupedRecords[identifier].map((recordData, index) => {
+                              const filteredData = Object.fromEntries(Object.entries(recordData).filter(([key, value]) => value !== null && value !== ''))
+                              return (
+                                <div key={index}>
+                                  {Object.keys(filteredData).map((keyName, buttonIndex) => ( // Map over keys of filteredData
+                                    <button key={buttonIndex} onClick={() => console.log(filteredData[keyName])}>{keyName}</button>
+                                  ))}
+                                </div>
+                              )
+                            })}
+                          </div>
+                        </div>
+                      ))}
+                    </>
+                  )
+                })()
+                : <div>Please select a PopUp</div> // If there're not records.
+            )
             : null
         }
       </div>
@@ -90,8 +90,21 @@ export default function Widget (props: AllWidgetProps<{}>) { // Function Compone
   }
 
   if (!isDsConfigured()) {
-    return <DataSourceRenderer configured={false} useDataSource={undefined} query={undefined} widgetId={undefined} dataRender={undefined} />
+    return <DataSourceRenderer
+      configured={false}
+      useDataSource={undefined}
+      query={undefined}
+      widgetId={undefined}
+      dataRender={undefined}
+      useMapWidgetIds={undefined}
+    />
   }
 
-  return <DataSourceRenderer configured={true} useDataSource={props.useDataSources[0]} query={query} widgetId={props.id} dataRender={dataRender} />
+  return <DataSourceRenderer
+    configured={true}
+    useDataSource={props.useDataSources[0]}
+    query={query} widgetId={props.id}
+    dataRender={dataRender}
+    useMapWidgetIds={props.useMapWidgetIds}
+  />
 }

@@ -1,8 +1,10 @@
 import { React, Immutable, IMFieldSchema, UseDataSource, AllDataSourceTypes } from 'jimu-core'
 import { AllWidgetSettingProps } from 'jimu-for-builder'
 import { DataSourceSelector, FieldSelector } from 'jimu-ui/advanced/data-source-selector'
+import { MapWidgetSelector } from 'jimu-ui/advanced/setting-components';
 
-export default function Setting (props: AllWidgetSettingProps<{}>) { // Function Component.
+
+export default function Setting(props: AllWidgetSettingProps<{}>) { // Function Component.
   const onFieldChange = (allSelectedFields: IMFieldSchema[]) => {
     props.onSettingChange({ // Function to update the widget settings.
       id: props.id,
@@ -24,6 +26,13 @@ export default function Setting (props: AllWidgetSettingProps<{}>) { // Function
     })
   }
 
+  const onMapWidgetSelected = (useMapWidgetIds: string[]) => {
+    props.onSettingChange({
+      id: props.id,
+      useMapWidgetIds: useMapWidgetIds
+    });
+  };
+
   return <div className="use-feature-layer-setting p-2">
     <DataSourceSelector // Create the user interface to select data sources.
       types={Immutable([AllDataSourceTypes.FeatureLayer])} // You can only select FeatureLayer data type.
@@ -41,5 +50,9 @@ export default function Setting (props: AllWidgetSettingProps<{}>) { // Function
         selectedFields={props.useDataSources[0].fields || Immutable([])}
       />
     }
+    <MapWidgetSelector
+      useMapWidgetIds={props.useMapWidgetIds}
+      onSelect={onMapWidgetSelected}
+    />
   </div>
 }

@@ -20,7 +20,7 @@ import AddTagView from './Views/AddTagView'
 
 export const SharedVariableContext = createContext(null);
 
-const DataSourceRenderer = ({ configured, useDataSource, query, widgetId, dataRender }) => {
+const DataSourceRenderer = ({ configured, useDataSource, query, widgetId, dataRender, useMapWidgetIds }) => {
   const [view, setView] = useState('home')
   const [title, setTitle] = useState('Home')
   const [prevView, setPrevView] = useState(null)
@@ -144,8 +144,8 @@ const DataSourceRenderer = ({ configured, useDataSource, query, widgetId, dataRe
               useDataSource={useDataSource}
               query={query}
               widgetId={widgetId}
-              queryCount
               dataRender={dataRender}
+              useMapWidgetIds={useMapWidgetIds}
             />}
           </SharedVariableContext.Provider>
         </div>
