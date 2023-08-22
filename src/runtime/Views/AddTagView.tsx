@@ -4,6 +4,10 @@ import { Button, styled } from '@mui/material'
 import { DataSourceComponent } from 'jimu-core'
 import { JimuMapViewComponent, JimuMapView } from 'jimu-arcgis'
 import Point from 'esri/geometry/Point'
+import ListItem from '@mui/material/ListItem'
+import ListItemIcon from '@mui/material/ListItemIcon'
+import ListItemText from '@mui/material/ListItemText'
+import List from '@mui/material/List'
 import '../../assets/stylesheets/addtag.css'
 
 const AnimatedUnderlineButton = styled(Button)(({ theme }) => ({
@@ -39,8 +43,6 @@ const AddTagView = ({ setView, useDataSource, query, widgetId, dataRender, useMa
         })
         setLatitude(point.latitude.toFixed(3))
         setLongitude(point.longitude.toFixed(3))
-        const clickLatitude = point.latitude.toFixed(3)
-        const clickLongitude = point.longitude.toFixed(3)
       })
     }
   }
@@ -52,8 +54,8 @@ const AddTagView = ({ setView, useDataSource, query, widgetId, dataRender, useMa
       <AnimatedUnderlineButton variant="text" size="small" onClick={() => { setSelectedTagType('ByCoordinate') }}>
         By Coordinate
       </AnimatedUnderlineButton>
-      <AnimatedUnderlineButton variant="text" size="small" onClick={() => { setSelectedTagType('ByTag') }}>
-        By Tag
+      <AnimatedUnderlineButton variant="text" size="small" onClick={() => { setSelectedTagType('ByField') }}>
+        By Field
       </AnimatedUnderlineButton>
       <AnimatedUnderlineButton variant="text" size="small" onClick={() => { setSelectedTagType('Personalized') }}>
         Personalized
@@ -71,14 +73,22 @@ const AddTagView = ({ setView, useDataSource, query, widgetId, dataRender, useMa
               />
             )
           }
-          <p>Lat/Lon: {latitude} {longitude}</p>
+          <p>
+            Selected latitude: {latitude}
+            <br />
+            Selected longitude: {longitude}
+            <br />
+            Name of the tag: "{latitude}{longitude}"
+          </p>
         </div>
       )}
 
-      {selectedTagType === 'ByTag' && (
-        <DataSourceComponent useDataSource={useDataSource} query={query} widgetId={widgetId} queryCount>
-          {dataRender}
-        </DataSourceComponent>
+      {selectedTagType === 'ByField' && (
+        <List className='scrollableList2'>
+          <DataSourceComponent useDataSource={useDataSource} query={query} widgetId={widgetId} queryCount>
+            {dataRender}
+          </DataSourceComponent>
+        </List>
       )}
 
       {selectedTagType === 'Personalized' && (

@@ -1,6 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { React, DataSource, DataSourceStatus, FeatureLayerQueryParams, AllWidgetProps } from 'jimu-core'
 import DataSourceRenderer from './widgetUI'
+import { styled } from '@mui/system'
+import Button from '@mui/material/Button'
 import '../assets/stylesheets/css.css'
 
 const { useState, useEffect, useRef } = React
@@ -39,6 +41,12 @@ export default function Widget(props: AllWidgetProps<{}>) { // Function Componen
     })
   }
 
+  const StyledButton = styled(Button)({
+    marginRight: '7px',
+    marginLeft: '7px',
+    marginTop: '10px',
+  })
+
   const dataRender = (ds: DataSource) => { // Function that renders all the data to the widget.
     return (
       <div className="record-list">
@@ -69,8 +77,10 @@ export default function Widget(props: AllWidgetProps<{}>) { // Function Componen
                               const filteredData = Object.fromEntries(Object.entries(recordData).filter(([key, value]) => value !== null && value !== ''))
                               return (
                                 <div key={index}>
-                                  {Object.keys(filteredData).map((keyName, buttonIndex) => ( // Map over keys of filteredData
-                                    <button key={buttonIndex} onClick={() => console.log(filteredData[keyName])}>{keyName}</button>
+                                  {Object.keys(filteredData).map((keyName, buttonIndex) => (
+                                    <div className="button-row" key={buttonIndex}>
+                                      <StyledButton variant="contained" color="success" size="small" onClick={() => console.log(filteredData[keyName])}>{keyName}</StyledButton>
+                                    </div>
                                   ))}
                                 </div>
                               )
@@ -80,6 +90,7 @@ export default function Widget(props: AllWidgetProps<{}>) { // Function Componen
                       ))}
                     </>
                   )
+
                 })()
                 : <div>Please select a PopUp</div> // If there're not records.
             )
