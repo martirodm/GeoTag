@@ -2,6 +2,8 @@ import React, { useContext, useState } from 'react'
 import { SharedVariableContext } from '../widgetUI'
 import { Button, styled } from '@mui/material'
 import { DataSourceComponent } from 'jimu-core'
+import { JimuMapViewComponent, JimuMapView } from 'jimu-arcgis'
+import Point from 'esri/geometry/Point'
 import '../../assets/stylesheets/addtag.css'
 
 const AnimatedUnderlineButton = styled(Button)(({ theme }) => ({
@@ -22,9 +24,27 @@ const AnimatedUnderlineButton = styled(Button)(({ theme }) => ({
   }
 }));
 
-const AddTagView = ({ setView, useDataSource, query, widgetId, dataRender, queryCount }) => {
+const AddTagView = ({ setView, useDataSource, query, widgetId, dataRender, useMapWidgetIds }) => {
   const { folderId, fileId, fileName } = useContext(SharedVariableContext)
   const [selectedTagType, setSelectedTagType] = useState(null);
+  const [latitude, setLatitude] = useState<string>('')
+  const [longitude, setLongitude] = useState<string>('')
+
+  const activeViewChangeHandler = (jmv: JimuMapView) => {
+    if (jmv) {
+      jmv.view.on('click', evt => {
+        const point: Point = jmv.view.toMap({
+          x: evt.x,
+          y: evt.y
+        })
+        setLatitude(point.latitude.toFixed(3))
+        setLongitude(point.longitude.toFixed(3))
+        const clickLatitude = point.latitude.toFixed(3)
+        const clickLongitude = point.longitude.toFixed(3)
+      })
+    }
+  }
+
 
   return (
     <div className='BodyTag'>
@@ -42,14 +62,23 @@ const AddTagView = ({ setView, useDataSource, query, widgetId, dataRender, query
       <br />
       {selectedTagType === 'ByCoordinate' && (
         <div>
-          Displaying content for By Coordinate.
+          {
+            useMapWidgetIds &&
+            useMapWidgetIds.length === 1 && (
+              <JimuMapViewComponent
+                useMapWidgetId={useMapWidgetIds[0]}
+                onActiveViewChange={activeViewChangeHandler}
+              />
+            )
+          }
+          <p>Lat/Lon: {latitude} {longitude}</p>
         </div>
       )}
 
       {selectedTagType === 'ByTag' && (
         <DataSourceComponent useDataSource={useDataSource} query={query} widgetId={widgetId} queryCount>
-        {dataRender}
-      </DataSourceComponent>
+          {dataRender}
+        </DataSourceComponent>
       )}
 
       {selectedTagType === 'Personalized' && (
