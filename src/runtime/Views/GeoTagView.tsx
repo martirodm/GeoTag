@@ -51,7 +51,7 @@ const FileListItem = ({ file, setView, setPrevView }) => {
   const [seeHovered, setSeeHovered] = useState(false)
   const [openHovered, setOpenHovered] = useState(false)
   const [fileHovered, setFileHovered] = useState(false)
-  const downloadIcons = ["dwg", "url", "xlsx", "pptx", "vsdx", "docx"]
+  const downloadIcons = ["dwg", "url", "xlsx", "pptx", "vsdx", "docx", "zip", "csv"]
 
   return (
     <ListItem secondaryAction={
