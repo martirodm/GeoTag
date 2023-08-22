@@ -8,9 +8,6 @@ const { useState, useEffect, useRef } = React
 export default function Widget(props: AllWidgetProps<{}>) { // Function Component.
   const [query, setQuery] = useState<FeatureLayerQueryParams>(null) // The inicial value of query variable is null.
   const nameRef = useRef<HTMLInputElement>(null) // References the HTML input element, which basically is the pop up.
-  const [latitude, setLatitude] = useState<string>('')
-  const [longitude, setLongitude] = useState<string>('')
-
 
   useEffect(() => { // This function is called when Widget is rendered, but just one time.
     queryFunc()
