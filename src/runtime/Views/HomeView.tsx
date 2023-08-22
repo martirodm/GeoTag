@@ -1,4 +1,4 @@
-import React, { useContext  } from 'react'
+import React, { useContext } from 'react'
 import { SharedVariableContext } from '../widgetUI'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
@@ -43,7 +43,7 @@ const HomeView = ({ setView, setPrevView }) => {
       setSiteName('')
     }
     handleClose()
-}
+  }
 
 
   const style = {

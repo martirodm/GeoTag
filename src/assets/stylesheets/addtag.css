@@ -11,53 +11,9 @@
     margin-top: 3%;
     margin-left: 1%;
     margin-right: 1%;
+
 }
 
-.button-row {
-    display: block;
-    /* makes sure each container occupies the full width */
-    margin-bottom: 5px;
-    /* add some space between rows */
-}
-
-.button-row button {
-    display: block;
-    width: 70%;
-    margin: 0 auto;
+.MuiButton-root.subButton {
     outline: 2px solid #f5f5f5;
-    background-color: transparent;
-    border-radius: 5px;
-    color: whitesmoke;
-    margin-top: '1px';
-    margin-bottom: '1px';
-}
-
-.scrollableList2 {
-    max-height: 20vh;
-    max-width: 55vh;
-    overflow: auto;
-    scrollbar-color: whitesmoke #23272f; /* For firefox */
-    scrollbar-width: thin; /* For firefox */
-}
-
-.scrollableList2 .MuiListItem-root {
-    padding: 8px;
-}
-
-.scrollableList2 .MuiListItemText-primary {
-    font-size: 0.8rem;
-}
-
-.scrollableList2::-webkit-scrollbar { /* For Chromium */
-    width: 10px;
-}
-
-.scrollableList2::-webkit-scrollbar-thumb { /* For Chromium */
-    background-color: whitesmoke;
-    border-radius: 6px;
-}
-
-.scrollableList2::-webkit-scrollbar-track { /* For Chromium */
-    background-color: #23272f;
-    border-radius: 6px;
 }

@@ -1,8 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { React, DataSource, DataSourceStatus, FeatureLayerQueryParams, AllWidgetProps } from 'jimu-core'
 import DataSourceRenderer from './widgetUI'
-import { styled } from '@mui/system'
-import Button from '@mui/material/Button'
+import { Select, MenuItem, SelectChangeEvent, FormControl, InputLabel } from '@mui/material'
 import '../assets/stylesheets/css.css'
 
 const { useState, useEffect, useRef } = React
@@ -41,61 +40,72 @@ export default function Widget(props: AllWidgetProps<{}>) { // Function Componen
     })
   }
 
-  const StyledButton = styled(Button)({
-    marginRight: '7px',
-    marginLeft: '7px',
-    marginTop: '10px',
-  })
+  const dataRender = (ds: DataSource, onButtonClick) => {
+    if (!ds || ds.getStatus() !== DataSourceStatus.Loaded || ds.getRecords().length === 0) {
+      return <div>Please select a PopUp</div>;
+    }
 
-  const dataRender = (ds: DataSource) => { // Function that renders all the data to the widget.
+    const groupedRecords = ds.getRecords().reduce((acc, record) => {
+      const rowData = record.getData();
+      const uniqueIdentifier = rowData.OBJECTID;
+
+      if (!acc[uniqueIdentifier]) {
+        acc[uniqueIdentifier] = [];
+      }
+
+      acc[uniqueIdentifier].push(rowData);
+      return acc;
+    }, {});
+
+    const handleDropdownChange = (event: SelectChangeEvent<string>, child: React.ReactNode) => {
+      const selectedData = event.target.value;
+      console.log(selectedData);
+      onButtonClick(selectedData);
+    }
+
     return (
       <div className="record-list">
-        {
-          ds && ds.getStatus() === DataSourceStatus.Loaded
-            ? ( // If the DataSource exists and is active:
-              ds.getRecords().length > 0 // If there are any records available:
-                ? (() => {
-                  // Group records by unique identifier.
-                  const groupedRecords = ds.getRecords().reduce((acc, record) => { // acc = unique identifier; reduce function is to group by the uniqueIdentifier.
-                    const rowData = record.getData()
-                    const uniqueIdentifier = rowData.OBJECTID // I select the OBJECTID from rowData array.
+        <FormControl sx={{ m: 1, minWidth: 150, color: '#f5f5f5', '&:hover .MuiInputLabel-root': { color: '#b0b0b0' }, '&.Mui-focused .MuiInputLabel-root': { color: '#f5f5f5' } }}>
+          <InputLabel id="field-selector-label" sx={{ color: '#f5f5f5', '&.Mui-focused': { color: '#f5f5f5' } }}>Choose Field</InputLabel>
+          <Select
+            labelId="field-selector-label"
+            id="field-selector"
+            defaultValue=""
+            displayEmpty
+            onChange={handleDropdownChange}
+            label="Choose Field"
+            sx={{
+              color: '#f5f5f5',
+              '& .MuiOutlinedInput-notchedOutline': {
+                borderColor: '#f5f5f5'
+              },
+              '&:hover .MuiOutlinedInput-notchedOutline': {
+                borderColor: '#b0b0b0'
+              },
+              '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                borderColor: '#f5f5f5'
+              },
+              '& .MuiSelect-icon': {
+                color: '#f5f5f5'
+              },
+              '&:hover .MuiSelect-icon': {
+                color: '#b0b0b0'
+              }
+            }}
+          >
+            {Object.keys(groupedRecords).map((identifier) => (
+              groupedRecords[identifier].map((recordData, index) => {
+                const filteredData = Object.fromEntries(Object.entries(recordData).filter(([key, value]) => value !== null && value !== ''));
 
-                    if (!acc[uniqueIdentifier]) { // If I don't have the "uniqueIdentifier":
-                      acc[uniqueIdentifier] = [] // I set is an empty array.
-                    }
-
-                    acc[uniqueIdentifier].push(rowData)
-                    return acc
-                  }, {})
-
-                  return (
-                    <>
-                      {Object.keys(groupedRecords).map((identifier) => (
-                        <div key={identifier}>
-                          <div>
-                            {groupedRecords[identifier].map((recordData, index) => {
-                              const filteredData = Object.fromEntries(Object.entries(recordData).filter(([key, value]) => value !== null && value !== ''))
-                              return (
-                                <div key={index}>
-                                  {Object.keys(filteredData).map((keyName, buttonIndex) => (
-                                    <div className="button-row" key={buttonIndex}>
-                                      <StyledButton variant="contained" color="success" size="small" onClick={() => console.log(filteredData[keyName])}>{keyName}</StyledButton>
-                                    </div>
-                                  ))}
-                                </div>
-                              )
-                            })}
-                          </div>
-                        </div>
-                      ))}
-                    </>
-                  )
-
-                })()
-                : <div>Please select a PopUp</div> // If there're not records.
-            )
-            : null
-        }
+                return Object.keys(filteredData).map((keyName) => (
+                  <MenuItem key={keyName} value={String(filteredData[keyName])}>
+                    {keyName}
+                  </MenuItem>
+                ));
+              })
+            ))}
+          </Select>
+        </FormControl>
       </div>
     )
   }
