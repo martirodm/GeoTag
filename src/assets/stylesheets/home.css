@@ -39,12 +39,10 @@
 /* For Firefox */
 .Body input::-moz-placeholder {
     color: #c8c8c8;
-    opacity: 1; 
-  }
-  
-  /* For Chrome, Safari, and Opera */
-  .Body input::-webkit-input-placeholder {
-    color: #c8c8c8;
-  }
+    opacity: 1;
+}
 
-  
+/* For Chrome, Safari, and Opera */
+.Body input::-webkit-input-placeholder {
+    color: #c8c8c8;
+}

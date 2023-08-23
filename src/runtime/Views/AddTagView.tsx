@@ -7,6 +7,7 @@ import Point from 'esri/geometry/Point'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import Modal from '@mui/material/Modal'
+import { Spacer } from '@nextui-org/react'
 import '../../assets/stylesheets/addtag.css'
 
 const AnimatedUnderlineButton = styled(Button)(({ theme }) => ({
@@ -24,6 +25,9 @@ const AnimatedUnderlineButton = styled(Button)(({ theme }) => ({
   },
   '&:hover::after': {
     transform: 'translateX(-50%) scaleX(1)',  // Scale horizontally to full size on hover
+  },
+  '&.active::after': {
+    transform: 'translateX(-50%) scaleX(1)',
   }
 }));
 
@@ -37,6 +41,8 @@ const AddTagView = ({ setView, useDataSource, query, widgetId, dataRender, useMa
   const [tag, setTag] = React.useState(null)
   const CoordTagRef = React.useRef(null)
   const FieldTagRef = React.useRef(null)
+  const [activeButton, setActiveButton] = useState<string | null>(null);
+
 
   const handleOpen = (ref, name) => {
     setOpen(true)
@@ -49,11 +55,7 @@ const AddTagView = ({ setView, useDataSource, query, widgetId, dataRender, useMa
   const handleClose = () => setOpen(false)
 
   const handleAdd = () => {
-    if (selected === 'CoordTag') {
-
-    } else if (selected === 'FieldTag') {
-
-    }
+    console.log(tag)
     handleClose()
   }
 
@@ -102,16 +104,16 @@ const AddTagView = ({ setView, useDataSource, query, widgetId, dataRender, useMa
   return (
     <div className='BodyTag'>
       <div>Add Tag to <span style={{ color: '#b0b0b0' }}>{fileName}</span></div>
-      <AnimatedUnderlineButton variant="text" size="small" onClick={() => { setTag(null), setSelectedTagType('ByCoordinate') }}>
+      <AnimatedUnderlineButton variant="text" size="small" onClick={() => { setTag(null), setSelectedTagType('ByCoordinate'), setActiveButton('ByCoordinate') }} className={activeButton === 'ByCoordinate' ? 'active' : ''}>
         By Coordinate
       </AnimatedUnderlineButton>
-      <AnimatedUnderlineButton variant="text" size="small" onClick={() => { setTag(null), setSelectedTagType('ByField') }}>
+      <AnimatedUnderlineButton variant="text" size="small" onClick={() => { setTag(null), setSelectedTagType('ByField'), setActiveButton('ByField') }} className={activeButton === 'ByField' ? 'active' : ''}>
         By Field
       </AnimatedUnderlineButton>
-      <AnimatedUnderlineButton variant="text" size="small" onClick={() => { setTag(null), setSelectedTagType('Personalized') }}>
+      <AnimatedUnderlineButton variant="text" size="small" onClick={() => { setTag(null), setSelectedTagType('Personalized'), setActiveButton('Personalized') }} className={activeButton === 'Personalized' ? 'active' : ''}>
         Personalized
       </AnimatedUnderlineButton>
-      <br />
+      <Spacer y={0.5} />
       {selectedTagType === 'ByCoordinate' && (
         <div>
           {
@@ -129,31 +131,39 @@ const AddTagView = ({ setView, useDataSource, query, widgetId, dataRender, useMa
             Selected longitude: {longitude}
             <br />
             Name of the tag: {tag}
+            <br />
+            <Button ref={CoordTagRef} className='subButton' variant="contained" color="success" size="small" onClick={() => handleOpen(CoordTagRef, 'CoordTag')} disabled={tag === "" || tag === null}>ADD</Button>
+            {(tag === "" || tag === null) && <p style={{ color: 'yellow' }}>Click on the part of the map you want to Tag</p>}
           </p>
-          <span>
-            <Button sx={{ border: '1px solid transparent', '&.Mui-disabled': { color: '#b0b0b0', borderColor: '#b0b0b0' } }} ref={CoordTagRef} className='subButton' variant="contained" color="success" size="small" onClick={() => handleOpen(CoordTagRef, 'CoordTag')} disabled={tag === "" || tag === null}>ADD</Button>
-            {(tag === "" || tag === null) && <p style={{ color: 'red' }}>Please select a valid tag before proceeding.</p>}
-          </span>
         </div>
       )}
 
       {selectedTagType === 'ByField' && (
         <div>
-          <DataSourceComponent useDataSource={useDataSource} query={query} widgetId={widgetId} queryCount>
-            {(ds) => dataRender(ds, setTag)}
-          </DataSourceComponent>
-          <span>
-            <Button sx={{ border: '1px solid transparent', '&.Mui-disabled': { color: '#b0b0b0', borderColor: '#b0b0b0' } }} ref={FieldTagRef} className='subButton' variant="contained" color="success" size="small" onClick={() => handleOpen(FieldTagRef, 'FieldTag')} disabled={tag === "" || tag === null}>ADD</Button>
-            {(tag === "" || tag === null) && <p style={{ color: 'red' }}>Please select a valid tag before proceeding.</p>}
-          </span>
+          <div>
+            <DataSourceComponent useDataSource={useDataSource} query={query} widgetId={widgetId} queryCount>
+              {(ds) => dataRender(ds, setTag)}
+            </DataSourceComponent>
+            <Spacer y={0.5} />
+            <Button ref={FieldTagRef} className='subButton' variant="contained" color="success" size="small" onClick={() => handleOpen(FieldTagRef, 'FieldTag')} disabled={tag === "" || tag === null}>ADD</Button>
+          </div>
         </div>
       )}
 
       {selectedTagType === 'Personalized' && (
         <div>
-          Displaying content for Personalized.
+          <Spacer y={0.5} />
+          <input
+            type="text"
+            value={tag || ''}
+            onChange={(e) => setTag(e.target.value)}
+            placeholder="Enter tag..."
+          />
+          <Spacer y={0.5} />
+          <Button ref={FieldTagRef} className='subButton' variant="contained" color="success" size="small" onClick={() => handleOpen(FieldTagRef, 'FieldTag')} disabled={tag === "" || tag === null}>ADD</Button>
         </div>
       )}
+
 
       <Modal
         open={open}

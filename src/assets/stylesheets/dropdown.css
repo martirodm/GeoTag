@@ -1,0 +1,60 @@
+.dropdown {
+    margin-top: 5px !important;
+    min-width: 150px !important;
+    color: #f5f5f5 !important;
+}
+
+.dropdown:hover .MuiInputLabel-root {
+    color: #b0b0b0 !important;
+}
+
+.dropdown.Mui-focused .MuiInputLabel-root {
+    color: #f5f5f5 !important;
+}
+
+.dropdownInput {
+    color: #f5f5f5 !important;
+    font-size: 15px !important;
+    position: absolute !important;
+    left: 10% !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+}
+
+.dropdownInput.Mui-focused {
+    color: #f5f5f5 !important;
+}
+
+.dropdown .MuiInputLabel-shrink {
+    transform: translateY(-120%) scale(0.75) !important;
+    left: 30 !important;
+}
+
+.dropdownSelect {
+    color: #f5f5f5 !important;
+    font-size: 15px !important;
+}
+
+.dropdownSelect .MuiOutlinedInput-input {
+    padding: 8px 26px 8px 12px !important;
+}
+
+.dropdownSelect .MuiOutlinedInput-notchedOutline {
+    border-color: #f5f5f5 !important;
+}
+
+.dropdownSelect:hover .MuiOutlinedInput-notchedOutline {
+    border-color: #b0b0b0 !important;
+}
+
+.dropdownSelect.Mui-focused .MuiOutlinedInput-notchedOutline {
+    color: #f5f5f5 !important;
+}
+
+.dropdownSelect .MuiSelect-icon {
+    color: #f5f5f5 !important;
+}
+
+.dropdownSelect:hover .MuiSelect-icon {
+    color: #b0b0b0 !important;
+}
