@@ -32,7 +32,7 @@ const AnimatedUnderlineButton = styled(Button)(({ theme }) => ({
 }));
 
 const AddTagView = ({ setView, useDataSource, query, widgetId, dataRender, useMapWidgetIds }) => {
-  const { folderId, fileId, fileName } = useContext(SharedVariableContext)
+  const { folderId, fileId, fileName, token, siteId } = useContext(SharedVariableContext)
   const [selectedTagType, setSelectedTagType] = useState(null);
   const [latitude, setLatitude] = useState<string>('')
   const [longitude, setLongitude] = useState<string>('')
@@ -55,7 +55,20 @@ const AddTagView = ({ setView, useDataSource, query, widgetId, dataRender, useMa
   const handleClose = () => setOpen(false)
 
   const handleAdd = () => {
-    console.log(tag)
+    const addTag = async () => {
+      const dataResponse = await fetch("http://localhost:3002/addTag", {
+        method: 'PATCH',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'siteId': siteId,
+          'tag': tag
+        }
+      })
+      const data = await dataResponse.text()
+      console.log(data)
+    }
+    addTag()
+
     handleClose()
   }
 
