@@ -47,7 +47,7 @@ export default function Widget(props: AllWidgetProps<{}>) { // Function Componen
     }
 
     const groupedRecords = ds.getRecords().reduce((acc, record) => {
-      const rowData = record.getData();
+      const rowData = record.getData();  // Get all fields from the popup.
       const uniqueIdentifier = rowData.OBJECTID;
 
       if (!acc[uniqueIdentifier]) {
