@@ -8,8 +8,9 @@ import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import Modal from '@mui/material/Modal'
 import { Spacer } from '@nextui-org/react'
-import TextField from '@mui/material/TextField';
+import TextField from '@mui/material/TextField'
 import '../../assets/stylesheets/addtag.css'
+
 const AnimatedUnderlineButton = styled(Button)(({ theme }) => ({
   position: 'relative',
   '&::after': {
@@ -32,7 +33,7 @@ const AnimatedUnderlineButton = styled(Button)(({ theme }) => ({
 }));
 
 const AddTagView = ({ setView, useDataSource, query, widgetId, dataRender, useMapWidgetIds }) => {
-  const { folderId, fileId, fileName } = useContext(SharedVariableContext)
+  const { folderId, fileId, fileName, token, siteId } = useContext(SharedVariableContext)
   const [selectedTagType, setSelectedTagType] = useState(null);
   const [latitude, setLatitude] = useState<string>('')
   const [longitude, setLongitude] = useState<string>('')
@@ -55,7 +56,22 @@ const AddTagView = ({ setView, useDataSource, query, widgetId, dataRender, useMa
   const handleClose = () => setOpen(false)
 
   const handleAdd = () => {
-    console.log(tag)
+
+    const addTag = async () => {
+      const dataResponse = await fetch("http://localhost:3002/addTag", {
+        method: 'PATCH',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'siteId': siteId,
+          'tag': tag
+        }
+      })
+      const data = await dataResponse.text()
+      console.log(data)
+    }
+    addTag()
+
+
     handleClose()
   }
 
@@ -141,6 +157,7 @@ const AddTagView = ({ setView, useDataSource, query, widgetId, dataRender, useMa
       {selectedTagType === 'ByField' && (
         <div>
           <div>
+
             {/* This comes from widget.tsx */}
             <DataSourceComponent useDataSource={useDataSource} query={query} widgetId={widgetId} queryCount>
               {(ds) => dataRender(ds, setTag)}
@@ -154,12 +171,6 @@ const AddTagView = ({ setView, useDataSource, query, widgetId, dataRender, useMa
       {selectedTagType === 'Personalized' && (
         <div>
           <Spacer y={0.5} />
-          {/* <input
-            type="text"
-            value={tag || ''}
-            onChange={(e) => setTag(e.target.value)}
-            placeholder="Enter tag..."
-          /> */}
 
           <TextField
             type='text'
