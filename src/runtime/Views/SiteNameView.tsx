@@ -4,6 +4,7 @@ import '../../assets/stylesheets/home.css'
 import SendIcon from '@mui/icons-material/Send'
 import LoadingButton from '@mui/lab/LoadingButton'
 import CircularProgress from '@mui/material/CircularProgress'
+import TextField from '@mui/material/TextField';
 import { styled } from '@mui/system'
 
 const ColoredCircularProgress = styled(CircularProgress)(({ theme }) => ({
@@ -59,18 +60,19 @@ const SiteNameView = ({ setView }) => {
 
   return (
     <div className='Body'>
+      <div>Write the name of your SharePoint Site:</div>
       <form onSubmit={handleSend}>
-        <div>Write the name of your SharePoint Site:</div>
         <br />
-        <input
-          className='SiteInput'
+        <TextField
           type='text'
           name='site_name'
-          placeholder='site_name'
           value={siteName.site_name}
           onChange={handleChange}
+          label='Site name'
+          variant='filled'
           required
         />
+
         <br />
         <div>
           <br />

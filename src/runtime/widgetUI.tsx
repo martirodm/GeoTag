@@ -61,7 +61,7 @@ const DataSourceRenderer = ({ configured, useDataSource, query, widgetId, dataRe
     setPrevView(null)
   }
 
-  // If the date source is not configure, add an image with instructions.
+  // If the date source is not configured, add an image with instructions.
   if (!configured) {
     return (
       <div className="InsertDataSource">

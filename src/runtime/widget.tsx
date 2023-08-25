@@ -3,6 +3,7 @@ import { React, DataSource, DataSourceStatus, FeatureLayerQueryParams, AllWidget
 import DataSourceRenderer from './widgetUI'
 import { Select, MenuItem, SelectChangeEvent, FormControl, InputLabel } from '@mui/material'
 import '../assets/stylesheets/css.css'
+import '../assets/stylesheets/dropdown.css'
 
 const { useState, useEffect, useRef } = React
 
@@ -46,7 +47,7 @@ export default function Widget(props: AllWidgetProps<{}>) { // Function Componen
     }
 
     const groupedRecords = ds.getRecords().reduce((acc, record) => {
-      const rowData = record.getData();
+      const rowData = record.getData();  // Get all fields from the popup.
       const uniqueIdentifier = rowData.OBJECTID;
 
       if (!acc[uniqueIdentifier]) {
@@ -59,14 +60,13 @@ export default function Widget(props: AllWidgetProps<{}>) { // Function Componen
 
     const handleDropdownChange = (event: SelectChangeEvent<string>, child: React.ReactNode) => {
       const selectedData = event.target.value;
-      console.log(selectedData);
       onButtonClick(selectedData);
     }
 
     return (
       <div className="record-list">
-        <FormControl sx={{ m: 1, minWidth: 150, color: '#f5f5f5', '&:hover .MuiInputLabel-root': { color: '#b0b0b0' }, '&.Mui-focused .MuiInputLabel-root': { color: '#f5f5f5' } }}>
-          <InputLabel id="field-selector-label" sx={{ color: '#f5f5f5', '&.Mui-focused': { color: '#f5f5f5' } }}>Choose Field</InputLabel>
+        <FormControl className="dropdown">
+          <InputLabel id="field-selector-label" className="dropdownInput">Choose Field</InputLabel>
           <Select
             labelId="field-selector-label"
             id="field-selector"
@@ -74,24 +74,7 @@ export default function Widget(props: AllWidgetProps<{}>) { // Function Componen
             displayEmpty
             onChange={handleDropdownChange}
             label="Choose Field"
-            sx={{
-              color: '#f5f5f5',
-              '& .MuiOutlinedInput-notchedOutline': {
-                borderColor: '#f5f5f5'
-              },
-              '&:hover .MuiOutlinedInput-notchedOutline': {
-                borderColor: '#b0b0b0'
-              },
-              '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                borderColor: '#f5f5f5'
-              },
-              '& .MuiSelect-icon': {
-                color: '#f5f5f5'
-              },
-              '&:hover .MuiSelect-icon': {
-                color: '#b0b0b0'
-              }
-            }}
+            className="dropdownSelect"
           >
             {Object.keys(groupedRecords).map((identifier) => (
               groupedRecords[identifier].map((recordData, index) => {
