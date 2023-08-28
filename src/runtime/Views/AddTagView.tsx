@@ -8,6 +8,7 @@ import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import Modal from '@mui/material/Modal'
 import { Spacer } from '@nextui-org/react'
+import TextField from '@mui/material/TextField'
 import '../../assets/stylesheets/addtag.css'
 
 const AnimatedUnderlineButton = styled(Button)(({ theme }) => ({
@@ -164,6 +165,8 @@ const AddTagView = ({ setView, useDataSource, query, widgetId, dataRender, useMa
       {selectedTagType === 'ByField' && (
         <div>
           <div>
+
+            {/* This comes from widget.tsx */}
             <DataSourceComponent useDataSource={useDataSource} query={query} widgetId={widgetId} queryCount>
               {(ds) => dataRender(ds, setTag)}
             </DataSourceComponent>
@@ -176,12 +179,16 @@ const AddTagView = ({ setView, useDataSource, query, widgetId, dataRender, useMa
       {selectedTagType === 'Personalized' && (
         <div>
           <Spacer y={0.5} />
-          <input
-            type="text"
+
+          <TextField
+            type='text'
             value={tag || ''}
             onChange={(e) => setTag(e.target.value)}
-            placeholder="Enter tag..."
+            label='Enter tag...'
+            variant='filled'
+            required
           />
+
           <Spacer y={0.5} />
           <Button ref={FieldTagRef} className='subButton' variant="contained" color="success" size="small" onClick={() => handleOpen(FieldTagRef, 'FieldTag')} disabled={tag === "" || tag === null}>ADD</Button>
         </div>

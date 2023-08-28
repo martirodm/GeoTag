@@ -235,7 +235,6 @@ const GeoTagView = ({ setView, setPrevView }) => {
 
   return (
     <div className='body'>
-
       <div className="breadcrumbs">
         {(selectedFolderId || historyFolders.length > 0) && (
           <>
