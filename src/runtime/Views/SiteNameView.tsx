@@ -29,7 +29,7 @@ const SiteNameView = ({ setView }) => {
 
   const handleSend = async (event) => {
     event.preventDefault()
-    console.log("Site name: " + siteName.site_name)
+    //console.log("Site name: " + siteName.site_name)
     setLoading(true)
     await fetch("http://localhost:3002/set-siteName", {
       method: 'POST',
@@ -47,11 +47,11 @@ const SiteNameView = ({ setView }) => {
     const sites = await getSites.json()
     if (sites != null) {
       setSiteId(sites.siteId)
-      console.log("SiteID setted: " + sites.siteId)
+      //console.log("SiteID setted: " + sites.siteId)
       setSiteWebUrl(sites.siteWebUrl)
-      console.log("SiteWebUrl setted: " + sites.siteWebUrl)
+      //console.log("SiteWebUrl setted: " + sites.siteWebUrl)
     } else {
-      console.log("Site doesn't exist")
+      //console.log("Site doesn't exist")
     }
 
     setView('home')
