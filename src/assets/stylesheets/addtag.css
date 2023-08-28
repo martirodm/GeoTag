@@ -28,7 +28,6 @@
     background: transparent;
     text-align: center;
     color: whitesmoke;
-    min-width: 100px;
 }
 
 .BodyTag input.SiteInput {
@@ -53,7 +52,7 @@
     background: transparent !important;
     text-align: center;
     color: whitesmoke;
-    min-width: 395px;
+    min-width: 340px;
 }
 
 .Body .MuiFilledInput-root {
@@ -62,7 +61,7 @@
 
 .Body .MuiFilledInput-input {
     color: whitesmoke;
-    min-width: 100px;
+    font-size: 13.5px;
 }
 
 .Body .MuiInputLabel-root {

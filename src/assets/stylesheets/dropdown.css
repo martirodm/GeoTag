@@ -1,14 +1,14 @@
-.dropdown {
+.dropdownMenu {
     margin-top: 5px !important;
     min-width: 150px !important;
     color: #f5f5f5 !important;
 }
 
-.dropdown:hover .MuiInputLabel-root {
+.dropdownMenu:hover .MuiInputLabel-root {
     color: #b0b0b0 !important;
 }
 
-.dropdown.Mui-focused .MuiInputLabel-root {
+.dropdownMenu.Mui-focused .MuiInputLabel-root {
     color: #f5f5f5 !important;
 }
 
@@ -25,7 +25,7 @@
     color: #f5f5f5 !important;
 }
 
-.dropdown .MuiInputLabel-shrink {
+.dropdownMenu .MuiInputLabel-shrink {
     transform: translateY(-120%) scale(0.75) !important;
     left: 30 !important;
 }

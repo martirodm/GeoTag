@@ -65,7 +65,7 @@ export default function Widget(props: AllWidgetProps<{}>) { // Function Componen
 
     return (
       <div className="record-list">
-        <FormControl className="dropdown">
+        <FormControl className="dropdownMenu">
           <InputLabel id="field-selector-label" className="dropdownInput">Choose Field</InputLabel>
           <Select
             labelId="field-selector-label"

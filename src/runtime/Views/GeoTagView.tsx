@@ -111,7 +111,7 @@ const FileListItem = ({ file, setView, setPrevView }) => {
 }
 
 const GeoTagView = ({ setView, setPrevView }) => {
-  const { token, siteId, siteWebUrl,folderFinalId, setFolderFinalId,folderId, setFolderId } = useContext(SharedVariableContext)
+  const { token, siteId, siteWebUrl, folderFinalId, setFolderFinalId, folderId, setFolderId } = useContext(SharedVariableContext)
   const [loading, setLoading] = useState(true)
   const [folders, setFolders] = useState([])
   const [files, setFiles] = useState([])
@@ -119,6 +119,13 @@ const GeoTagView = ({ setView, setPrevView }) => {
   const [selectedFolderName, setSelectedFolderName] = useState(null)
   const [, forceUpdate] = useState(0)
   const [historyFolders, setHistoryFolders] = useState([])
+  const [isFolderEmpty, setIsFolderEmpty] = useState(false);
+
+  if (!token) {
+    return (
+      <div className="no-credentials">Please add credentials.</div>
+    )
+  }
 
   function getValueInsideBraces(str) {
     const match = str.match(/{(.*?)}/)
@@ -137,9 +144,9 @@ const GeoTagView = ({ setView, setPrevView }) => {
 
       setLoading(true)
 
-      console.log("final id: "+folderFinalId);
-      console.log("id: "+folderId);
-      if (folderFinalId){
+      console.log("final id: " + folderFinalId);
+      console.log("id: " + folderId);
+      if (folderFinalId) {
         setSelectedFolderId(folderFinalId)
         setFolderId(null)
       }
@@ -196,11 +203,19 @@ const GeoTagView = ({ setView, setPrevView }) => {
           filesData.push(fileData)
         }
       })
+
       setFolders(foldersData)
       setFiles(filesData)
       setFolderFinalId(null)
       forceUpdate(n => n + 1)
       setLoading(false)
+
+      // Check if foldersData array contains files and folders inside.
+      if (foldersData.length === 0 && filesData.length == 0) {
+        setIsFolderEmpty(true)
+      } else {
+        setIsFolderEmpty(false)
+      }
     }
     getData()
   }, [selectedFolderId]) //If selectedFolderId changes execute useEffect again
@@ -215,7 +230,6 @@ const GeoTagView = ({ setView, setPrevView }) => {
     setSelectedFolderId(null); // Or whatever represents the top level in your system
     setHistoryFolders([]);     // Reset the breadcrumb history
   };
-
 
   if (loading) {
     return (
@@ -255,6 +269,11 @@ const GeoTagView = ({ setView, setPrevView }) => {
       </div>
 
       <List className='scrollableList'>
+        {/* Display message if folder is empty */}
+        {isFolderEmpty && (
+          <div className="empty-folder-message">This folder is empty.</div>
+        )}
+
         {folders.map((folder) => (
           <FolderListItem folder={folder} setSelectedFolderId={setSelectedFolderId} setSelectedFolderName={setSelectedFolderName} />
         ))}
