@@ -47,7 +47,7 @@ const FolderListItem = ({ folder, setSelectedFolderId, setSelectedFolderName }) 
 }
 
 const FileListItem = ({ file, setView, setPrevView }) => {
-  const { setFileId, setFileName } = useContext(SharedVariableContext)
+  const { setFileId, setFileName, setFileTags } = useContext(SharedVariableContext)
   const [seeHovered, setSeeHovered] = useState(false)
   const [openHovered, setOpenHovered] = useState(false)
   const [fileHovered, setFileHovered] = useState(false)
@@ -88,7 +88,7 @@ const FileListItem = ({ file, setView, setPrevView }) => {
 
       </div>
     }
-      onClick={() => { setFileId(file.id), setFileName(file.name), setPrevView('geoTag'); setView('addTag') }}
+      onClick={() => { setFileId(file.id), setFileName(file.name), setFileTags(file.labels), setPrevView('geoTag'); setView('addTag') }}
       onMouseEnter={() => setFileHovered(true)} onMouseLeave={() => setFileHovered(false)}
       style={{ backgroundColor: fileHovered ? '#161b22' : 'transparent', cursor: 'pointer' }}
       key={file.id}>
@@ -144,9 +144,10 @@ const GeoTagView = ({ setView, setPrevView }) => {
 
       setLoading(true)
 
-      console.log("final id: " + folderFinalId);
-      console.log("id: " + folderId);
-      if (folderFinalId) {
+
+      //console.log("final id: "+folderFinalId);
+      //console.log("id: "+folderId);
+      if (folderFinalId){
         setSelectedFolderId(folderFinalId)
         setFolderId(null)
       }
@@ -198,7 +199,7 @@ const GeoTagView = ({ setView, setPrevView }) => {
             downloadurl: file.listItem.webUrl,
             previewurl: previewUrl,
             icon: file.listItem.fields.DocIcon,
-            labels: file.listItem.fields.Taxonomy ? file.listItem.fields.Taxonomy.map(file2 => file2.Label) : []
+            labels: file.listItem.fields.GeoTag ? file.listItem.fields.GeoTag.map(file2 => ({label: file2.Label, termGuid: file2.TermGuid})) : []
           }
           filesData.push(fileData)
         }

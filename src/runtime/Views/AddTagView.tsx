@@ -33,7 +33,7 @@ const AnimatedUnderlineButton = styled(Button)(({ theme }) => ({
 }));
 
 const AddTagView = ({ setView, useDataSource, query, widgetId, dataRender, useMapWidgetIds }) => {
-  const { folderId, fileId, fileName, token, siteId } = useContext(SharedVariableContext)
+  const { folderId, fileId, fileTags, setFileTags, fileName, token, siteId } = useContext(SharedVariableContext)
   const [selectedTagType, setSelectedTagType] = useState(null);
   const [latitude, setLatitude] = useState<string>('')
   const [longitude, setLongitude] = useState<string>('')
@@ -43,10 +43,10 @@ const AddTagView = ({ setView, useDataSource, query, widgetId, dataRender, useMa
   const CoordTagRef = React.useRef(null)
   const FieldTagRef = React.useRef(null)
   const [activeButton, setActiveButton] = useState<string | null>(null);
-
+  const [modalState, setModalState] = useState<'closed' | 'firstModal' | 'successModal' | 'errorModal'>('closed');
 
   const handleOpen = (ref, name) => {
-    setOpen(true)
+    setModalState('firstModal')
     setSelected(name)
     if (ref.current) {
       ref.current.blur()
@@ -56,23 +56,31 @@ const AddTagView = ({ setView, useDataSource, query, widgetId, dataRender, useMa
   const handleClose = () => setOpen(false)
 
   const handleAdd = () => {
-
-    const addTag = async () => {
-      const dataResponse = await fetch("http://localhost:3002/addTag", {
-        method: 'PATCH',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'siteId': siteId,
-          'tag': tag
-        }
-      })
-      const data = await dataResponse.text()
-      console.log(data)
+    console.log(fileTags)
+    if (fileTags.map(tag => tag.label.toLowerCase()).includes(tag.toLowerCase())) {
+      console.log("The file already has this tag!")
+      setModalState('errorModal')
+    } else {
+      const addTag = async () => {
+        const dataResponse = await fetch("http://localhost:3002/addTag", {
+          method: 'PATCH',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            siteId: siteId,
+            tag: tag,
+            fileTags: fileTags,
+            fileId: fileId
+          })
+        })
+        const data = await dataResponse.json()
+        setFileTags(fileTags => [...fileTags, data]);
+        setModalState('successModal')
+      }
+      addTag()
     }
-    addTag()
-
-
-    handleClose()
   }
 
   const StyledButton = styled(Button)({
@@ -188,25 +196,45 @@ const AddTagView = ({ setView, useDataSource, query, widgetId, dataRender, useMa
 
 
       <Modal
-        open={open}
-        onClose={handleClose}
+        open={modalState !== 'closed'}
+        onClose={() => setModalState('closed')}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <Typography id="modal-modal-title" variant="h6" component="h2" sx={{ fontWeight: 'bolder', color: 'whitesmoke' }}>
-            Warning
-          </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+          {modalState === 'firstModal' && (
             <>
-              Add the tag <span style={{ color: '#b0b0b0' }}><strong>{tag}</strong></span> to the file <span style={{ color: '#b0b0b0' }}><strong>{fileName}</strong></span>?
+              <Typography id="modal-modal-title" variant="h6" component="h2" sx={{ fontWeight: 'bolder', color: 'whitesmoke' }}>
+                Warning
+              </Typography>
+              <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                Add the tag <span style={{ color: '#b0b0b0' }}><strong>{tag}</strong></span> to the file <span style={{ color: '#b0b0b0' }}><strong>{fileName}</strong></span>?
+              </Typography>
+              <StyledButton variant="contained" color="success" onClick={handleAdd}>Yes</StyledButton>
+              <StyledButton variant="contained" color="error" onClick={() => setModalState('closed')}>No</StyledButton>
             </>
+          )}
 
-          </Typography>
-          <StyledButton variant="contained" color="error" onClick={handleAdd}>Yes</StyledButton>
-          <StyledButton variant="contained" color="success" onClick={handleClose}>No</StyledButton>
+          {modalState === 'successModal' && (
+            <>
+              <Typography id="modal-modal-title" variant="h6" component="h2" sx={{ fontWeight: 'bolder', color: 'whitesmoke' }}>
+                The tag has been created succesfully!
+              </Typography>
+              <StyledButton variant="contained" color="success" onClick={() => setModalState('closed')}>Close</StyledButton>
+            </>
+          )}
+
+          {modalState === 'errorModal' && (
+            <>
+              <Typography id="modal-modal-title" variant="h6" component="h2" sx={{ fontWeight: 'bolder', color: 'red' }}>
+                The file already has this tag!
+              </Typography>
+              <StyledButton variant="contained" color="success" onClick={() => setModalState('closed')}>Close</StyledButton>
+            </>
+          )}
         </Box>
       </Modal>
+
     </div>
   )
 }

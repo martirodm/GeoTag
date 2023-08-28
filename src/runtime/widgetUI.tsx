@@ -45,6 +45,8 @@ const DataSourceRenderer = ({ configured, useDataSource, query, widgetId, dataRe
   const [folderFinalId, setFolderFinalId] = useState(null)
   const [fileId, setFileId] = useState(null)
   const [fileName, setFileName] = useState(null)
+
+  const [fileTags, setFileTags] = useState(null)
   // ----------------------------------------------------------
 
   if (view === prevView) {
@@ -115,7 +117,7 @@ const DataSourceRenderer = ({ configured, useDataSource, query, widgetId, dataRe
           <Spacer y={0.5} />
         </div>
         <div className="body">
-          <SharedVariableContext.Provider value={{ credentials, setCredentials, siteName, setSiteName, token, setToken, siteId, setSiteId, siteWebUrl, setSiteWebUrl, folderId, setFolderId, folderFinalId, setFolderFinalId, fileId, setFileId, fileName, setFileName }}>
+          <SharedVariableContext.Provider value={{ credentials, setCredentials, siteName, setSiteName, token, setToken, siteId, setSiteId, siteWebUrl, setSiteWebUrl, folderId, setFolderId, folderFinalId, setFolderFinalId, fileId, setFileId, fileName, setFileName, fileTags, setFileTags }}>
             {view === 'home' && <HomeView setView={setView} setPrevView={setPrevView} />}
             {view === 'seeFiles' && <SeeFilesView
               useDataSource={useDataSource}
