@@ -29,7 +29,7 @@
   background: transparent !important;
   text-align: center;
   color: whitesmoke;
-  min-width: 395px;
+  min-width: 340px;
 }
 
 .BodyTag .MuiFilledInput-root {
@@ -38,7 +38,7 @@
 
 .BodyTag .MuiFilledInput-input {
   color: whitesmoke;
-  min-width: 100px;
+  font-size: 13.5px;
 }
 
 .BodyTag .MuiInputLabel-root {
@@ -52,4 +52,14 @@
 
 .BodyTag .MuiFilledInput-underline:after {
   border-bottom-color: whitesmoke;
+}
+
+/* Delete white  */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: whitesmoke;
+  transition: background-color 5000s ease-in-out 0s;
 }
