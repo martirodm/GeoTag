@@ -3,9 +3,9 @@ import { DataSourceComponent } from 'jimu-core'
 import { SharedVariableContext } from '../widgetUI'
 
 const SeeFilesView = ({ useDataSource, query, widgetId, dataRender, queryCount }) => {
-  const { token } = useContext(SharedVariableContext)
+  const { token, siteId } = useContext(SharedVariableContext)
 
-  if (!token) {
+  if (!(token && siteId)) {
     return (
       <div className="no-credentials">Please add credentials.</div>
     )

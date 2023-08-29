@@ -11,7 +11,6 @@
     margin-top: 3%;
     margin-left: 1%;
     margin-right: 1%;
-
 }
 
 .subButton {
@@ -20,6 +19,20 @@
 
 .subButton.Mui-disabled {
     display: none !important;
+}
+
+.truncate {
+    max-width: 300px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.truncateTag {
+    min-width: 210px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .BodyTag input {
@@ -33,7 +46,6 @@
 .BodyTag input.SiteInput {
     min-width: 100px;
 }
-
 
 /* For Firefox */
 .BodyTag input::-moz-placeholder {
@@ -50,7 +62,6 @@
     outline: 2px solid #f5f5f5;
     border-radius: 5px;
     background: transparent !important;
-    text-align: center;
     color: whitesmoke;
     min-width: 340px;
 }

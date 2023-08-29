@@ -36,10 +36,6 @@ const FolderListItem = ({ folder, setSelectedFolderId, setSelectedFolderName }) 
       <Tooltip title={folder.name} placement="bottom-start" disableInteractive>
         <ListItemText
           primary={<div className="truncate">{folder.name}</div>}
-          style={{
-            /* color: folderHovered ? '#c8c8c8' : '#f5f5f5', */
-            maxWidth: "210px"
-          }}
         />
       </Tooltip>
     </ListItem>
@@ -121,7 +117,7 @@ const GeoTagView = ({ setView, setPrevView }) => {
   const [historyFolders, setHistoryFolders] = useState([])
   const [isFolderEmpty, setIsFolderEmpty] = useState(false);
 
-  if (!token) {
+  if (!(token && siteId)) {
     return (
       <div className="no-credentials">Please add credentials.</div>
     )
@@ -147,7 +143,7 @@ const GeoTagView = ({ setView, setPrevView }) => {
 
       //console.log("final id: "+folderFinalId);
       //console.log("id: "+folderId);
-      if (folderFinalId){
+      if (folderFinalId) {
         setSelectedFolderId(folderFinalId)
         setFolderId(null)
       }
@@ -199,7 +195,7 @@ const GeoTagView = ({ setView, setPrevView }) => {
             downloadurl: file.listItem.webUrl,
             previewurl: previewUrl,
             icon: file.listItem.fields.DocIcon,
-            labels: file.listItem.fields.GeoTag ? file.listItem.fields.GeoTag.map(file2 => ({label: file2.Label, termGuid: file2.TermGuid})) : []
+            labels: file.listItem.fields.GeoTag ? file.listItem.fields.GeoTag.map(file2 => ({ label: file2.Label, termGuid: file2.TermGuid })) : []
           }
           filesData.push(fileData)
         }
