@@ -127,7 +127,11 @@ const AddTagView = ({ setView, useDataSource, query, widgetId, dataRender, useMa
 
   return (
     <div className='BodyTag'>
-      <div>Add Tag to <span style={{ color: '#b0b0b0' }}>{fileName}</span></div>
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <div className='truncate'>
+          Add Tag to <span style={{ color: '#b0b0b0' }}>{fileName}</span>
+        </div>
+      </div>
       <AnimatedUnderlineButton variant="text" size="small" onClick={() => { setTag(null), setSelectedTagType('ByCoordinate'), setActiveButton('ByCoordinate') }} className={activeButton === 'ByCoordinate' ? 'active' : ''}>
         By Coordinate
       </AnimatedUnderlineButton>
@@ -165,7 +169,6 @@ const AddTagView = ({ setView, useDataSource, query, widgetId, dataRender, useMa
       {selectedTagType === 'ByField' && (
         <div>
           <div>
-
             {/* This comes from widget.tsx */}
             <DataSourceComponent useDataSource={useDataSource} query={query} widgetId={widgetId} queryCount>
               {(ds) => dataRender(ds, setTag)}
@@ -207,9 +210,10 @@ const AddTagView = ({ setView, useDataSource, query, widgetId, dataRender, useMa
               <Typography id="modal-modal-title" variant="h6" component="h2" sx={{ fontWeight: 'bolder', color: 'whitesmoke' }}>
                 Warning
               </Typography>
-              <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+              <Typography className='truncateTag' id="modal-modal-description" sx={{ mt: 2, whiteSpace: 'normal' }}>  {/* whiteSpace is for breaking to a new line if I have an ellipsis*/}
                 Add the tag <span style={{ color: '#b0b0b0' }}><strong>{tag}</strong></span> to the file <span style={{ color: '#b0b0b0' }}><strong>{fileName}</strong></span>?
               </Typography>
+
               <StyledButton variant="contained" color="success" onClick={handleAdd}>Yes</StyledButton>
               <StyledButton variant="contained" color="error" onClick={() => setModalState('closed')}>No</StyledButton>
             </>
