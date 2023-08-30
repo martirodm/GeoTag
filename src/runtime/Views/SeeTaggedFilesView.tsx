@@ -12,15 +12,16 @@ import '../../assets/stylesheets/css.css'
 import * as FileExpIcons from '../../assets/images/FileExplorer/indexFileExp'
 
 const FileListItem = ({ file }) => {
+  const { downloadIcons, imageExtensions } = useContext(SharedVariableContext)
   const [seeHovered, setSeeHovered] = useState(false)
   const [openHovered, setOpenHovered] = useState(false)
   const [fileHovered, setFileHovered] = useState(false)
-  const downloadIcons = ["dwg", "url", "xlsx", "pptx", "vsdx", "docx", "zip", "csv"]
-
+  
+  console.log(file.icon)
   return (
     <ListItem secondaryAction={
       <div>
-        {downloadIcons.includes(file.icon) && (
+        {downloadIcons.includes(file.icon) ? (
           <Tooltip title="Download File" disableInteractive>
             <IconButton edge="end" aria-label="download" onClick={(e) => {
               e.stopPropagation()
@@ -36,13 +37,11 @@ const FileListItem = ({ file }) => {
               <img src={openHovered ? FileExpIcons.DownloadIconHover : FileExpIcons.DownloadIcon} />
             </IconButton>
           </Tooltip>
-
-        )}
-        {!downloadIcons.includes(file.icon) && (
+        ) : (
           <Tooltip title="Open File" disableInteractive>
             <IconButton edge="end" aria-label="open" onClick={(e) => {
               e.stopPropagation();
-              if (file.icon == "jpg") {
+              if (imageExtensions.includes(file.icon)) {
                 window.open(file.dwgdownloadurl, '_blank')
               } else {
                 window.open(file.downloadurl, '_blank')
@@ -58,7 +57,7 @@ const FileListItem = ({ file }) => {
 
       onClick={(e) => {
         e.stopPropagation();
-        if (downloadIcons.includes(file.icon)) {
+        if (downloadIcons.includes(file.icon) || imageExtensions.includes(file.icon)) {
           window.open(file.dwgpreviewurl, '_blank')
         } else {
           window.open(file.previewurl, '_blank')
@@ -86,10 +85,9 @@ const FileListItem = ({ file }) => {
 }
 
 const SeeTaggedFilesView = () => {
-  const { siteId, nameTag, siteWebUrl } = useContext(SharedVariableContext)
+  const { siteId, nameTag, siteWebUrl, downloadIcons, imageExtensions } = useContext(SharedVariableContext)
   const [loading, setLoading] = useState(true)
   const [files, setFiles] = useState([])
-  const downloadIcons = ["dwg", "url", "xlsx", "pptx", "vsdx", "docx", "zip", "csv"]
 
   function getFileExtension(filename) {
     let parts1 = filename.split('.');
@@ -154,7 +152,7 @@ const SeeTaggedFilesView = () => {
             icon: getFileExtension(file.name),
           }
 
-          if (downloadIcons.includes(getFileExtension(file.name))) {
+          if (downloadIcons.includes(getFileExtension(file.name)) || imageExtensions.includes(getFileExtension(file.name)) ) {
             console.log("Name: " + file.name)
             console.log("ID: " + file.id)
 
