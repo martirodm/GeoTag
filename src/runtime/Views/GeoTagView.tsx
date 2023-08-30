@@ -84,7 +84,7 @@ const FileListItem = ({ file, setView, setPrevView }) => {
 
       </div>
     }
-      onClick={() => { setFileId(file.id), setFileName(file.name), setFileTags(file.labels), setPrevView('geoTag'); setView('addTag') }}
+      onClick={() => { setFileId(file.id), setFileName(file.name), setFileTags(file.labels), setPrevView('geoTag'), setView('addTag') }}
       onMouseEnter={() => setFileHovered(true)} onMouseLeave={() => setFileHovered(false)}
       style={{ backgroundColor: fileHovered ? '#161b22' : 'transparent', cursor: 'pointer' }}
       key={file.id}>

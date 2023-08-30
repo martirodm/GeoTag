@@ -65,11 +65,10 @@ const AddTagView = ({ setView, useDataSource, query, widgetId, dataRender, useMa
         const dataResponse = await fetch("http://localhost:3002/addTag", {
           method: 'PATCH',
           headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'siteId': siteId
           },
           body: JSON.stringify({
-            siteId: siteId,
             tag: tag,
             fileTags: fileTags,
             fileId: fileId
