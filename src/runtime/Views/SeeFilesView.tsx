@@ -57,8 +57,6 @@ const SeeFilesView = ({ setView, setPrevView, useDataSource, query, widgetId, da
     }
   }, [latitude, longitude]);
 
-
-
   return (
     <div className='BodyTag'>
       <div>Find GeoTagged file</div>

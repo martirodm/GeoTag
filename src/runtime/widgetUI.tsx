@@ -38,23 +38,13 @@ const DataSourceRenderer = ({ configured, useDataSource, query, widgetId, dataRe
     client_secret: '',
     tenant_id: '',
   })
-
-  const [siteName, setSiteName] = useState({
-    site_name: '',
-  })
-
+  const [siteName, setSiteName] = useState({ site_name: '' })
   const [token, setToken] = useState(null)
-
   const [siteId, setSiteId] = useState(null)
-
   const [siteWebUrl, setSiteWebUrl] = useState(null)
-
   const [folderId, setFolderId] = useState(null)
-
   const [folderFinalId, setFolderFinalId] = useState(null)
-
   const [fileId, setFileId] = useState(null)
-
   const [fileName, setFileName] = useState(null)
 
   const [fileTags, setFileTags] = useState(null)
@@ -78,7 +68,6 @@ const DataSourceRenderer = ({ configured, useDataSource, query, widgetId, dataRe
         </div>
       </div>
     )
-
   }
 
   return (
@@ -159,7 +148,7 @@ const DataSourceRenderer = ({ configured, useDataSource, query, widgetId, dataRe
           </SharedVariableContext.Provider>
         </div>
       </div>
-    </div >
+    </div>
   )
 }
 

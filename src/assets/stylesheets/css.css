@@ -32,14 +32,12 @@
     outline: inherit;
 }
 
-
 h3 {
     font-weight: bolder;
     color: whitesmoke;
     justify-self: center;
     grid-area: title;
     border-radius: 5px;
-    /* background-color: blue; */
 }
 
 .left-bar {
@@ -47,14 +45,12 @@ h3 {
     width: 50%;
     height: 100%;
     grid-area: left-bar;
-    /* background-color: red; */
 }
 
 .goBack {
     align-self: center;
     width: 50%;
     grid-area: go-back;
-    /* background-color: wheat; */
 }
 
 .widget-use-feature-layer {
@@ -73,7 +69,6 @@ h3 {
     grid-area: body;
     width: 100%;
     height: 100%;
-    /* background-color: yellow; */
 }
 
 .record-list {
@@ -85,56 +80,54 @@ h3 {
     grid-area: body;
 }
 
-.scrollableList {
-    max-height: 30vh;
-    max-width: 55vh;
-    overflow: auto;
-    scrollbar-color: whitesmoke #23272f; /* For firefox */
-    scrollbar-width: thin; /* For firefox */
+.no-credentials,
+.no-popup,
+.empty-folder-message {
+    text-align: center;
+    font-size: 20px;
+    margin: 15%;
+    color: whitesmoke;
 }
 
-.scrollableList .MuiListItem-root {
-    padding: 8px;
+/* Delete white in in TextField. */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: whitesmoke;
+    transition: background-color 5000s ease-in-out 0s;
 }
 
-.scrollableList .MuiListItemText-primary {
-    font-size: 0.8rem;
+/* MUI styles for both .Body and .BodyTag */
+.Body .MuiTextField-root,
+.BodyTag .MuiTextField-root {
+    outline: 2px solid #f5f5f5;
+    border-radius: 5px;
+    background: transparent !important;
+    color: whitesmoke;
+    min-width: 340px;
 }
 
-.truncate {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+.Body .MuiFilledInput-root,
+.BodyTag .MuiFilledInput-root {
+    background-color: transparent !important;
 }
 
-.scrollableList::-webkit-scrollbar { /* For Chromium */
-    width: 10px;
+.Body .MuiFilledInput-input,
+.BodyTag .MuiFilledInput-input {
+    color: whitesmoke;
+    font-size: 13.5px;
 }
 
-.scrollableList::-webkit-scrollbar-thumb { /* For Chromium */
-    background-color: whitesmoke;
-    border-radius: 6px;
+.Body .MuiInputLabel-root,
+.BodyTag .MuiInputLabel-root,
+.Body .MuiInputLabel-filled.Mui-focused,
+.BodyTag .MuiInputLabel-filled.Mui-focused {
+    color: lightgrey !important;
 }
 
-.scrollableList::-webkit-scrollbar-track { /* For Chromium */
-    background-color: #23272f;
-    border-radius: 6px;
-}
-
-.breadcrumbs {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 5px;
-}
-
-.breadcrumbs button {
-    background: none;
-    border: none;
-    color: #c8c8c8;  /* Adjust as per your theme */
-    font-size: smaller;
-    cursor: pointer;
-}
-
-.breadcrumbs button:hover {
-    text-decoration: none;
+.Body .MuiFilledInput-underline:after,
+.BodyTag .MuiFilledInput-underline:after {
+    border-bottom-color: whitesmoke;
 }
