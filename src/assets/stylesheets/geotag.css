@@ -1,14 +1,52 @@
-.BodyTag {
-    text-align: center;
-    font-weight: bolder;
-    color: whitesmoke;
-    overflow-y: auto;
-    margin-left: 20%;
-    margin-bottom: 20%;
+.scrollableList {
+    max-height: 30vh;
+    max-width: 55vh;
+    overflow: auto;
+    scrollbar-color: whitesmoke #23272f;
+    /* For firefox */
+    scrollbar-width: thin;
 }
 
-.scrollableList {
-    max-height: 20vh;
-    max-width: 50vh;
-    overflow-y: auto;
+.scrollableList .MuiListItem-root {
+    padding: 8px;
+}
+
+.scrollableList .MuiListItemText-primary {
+    font-size: 0.8rem;
+}
+
+.scrollableList::-webkit-scrollbar {
+    /* For Chromium */
+    width: 10px;
+}
+
+.scrollableList::-webkit-scrollbar-thumb {
+    /* For Chromium */
+    background-color: whitesmoke;
+    border-radius: 6px;
+}
+
+.scrollableList::-webkit-scrollbar-track {
+    /* For Chromium */
+    background-color: #23272f;
+    border-radius: 6px;
+}
+
+.breadcrumbs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.breadcrumbs button {
+    background: none;
+    border: none;
+    color: #c8c8c8;
+    /* Adjust as per your theme */
+    font-size: smaller;
+    cursor: pointer;
+}
+
+.breadcrumbs button:hover {
+    text-decoration: none;
 }
