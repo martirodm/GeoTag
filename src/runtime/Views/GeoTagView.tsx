@@ -43,11 +43,10 @@ const FolderListItem = ({ folder, setSelectedFolderId, setSelectedFolderName }) 
 }
 
 const FileListItem = ({ file, setView, setPrevView }) => {
-  const { setFileId, setFileName, setFileTags } = useContext(SharedVariableContext)
+  const { setFileId, setFileName, setFileTags, downloadIcons } = useContext(SharedVariableContext)
   const [seeHovered, setSeeHovered] = useState(false)
   const [openHovered, setOpenHovered] = useState(false)
   const [fileHovered, setFileHovered] = useState(false)
-  const downloadIcons = ["dwg", "url", "xlsx", "pptx", "vsdx", "docx", "zip", "csv"]
 
   return (
     <ListItem secondaryAction={

@@ -9,14 +9,14 @@ import * as WhiteIcons from '../assets/images/White/indexWhite'
 import * as HoverIcons from '../assets/images/Hover/indexHover'
 import InsertDataSource from '../assets/images/InsertDataSource.svg'
 //---------------------Views---------------------------------
-import HomeView from './Views/HomeView'
-import SeeFilesView from './Views/SeeFilesView'
-import GeoTagView from './Views/GeoTagView'
-import SettingsView from './Views/SettingsView'
-import AppCredentialsView from './Views/AppCredentialsView'
-import SiteNameView from './Views/SiteNameView'
-import AddTagView from './Views/AddTagView'
-import SeeTaggedFilesView from './Views/SeeTaggedFilesView'
+import HomeView from './Views/HomeView'                       //Main View
+import SeeFilesView from './Views/SeeFilesView'               //Main View
+import GeoTagView from './Views/GeoTagView'                   //Main View
+import SettingsView from './Views/SettingsView'               //Main View
+import AppCredentialsView from './Views/AppCredentialsView'   //SubView of Home
+import SiteNameView from './Views/SiteNameView'               //SubView of Home
+import SeeTaggedFilesView from './Views/SeeTaggedFilesView'   //SubView of SeeFiles
+import AddTagView from './Views/AddTagView'                   //SubView of GeoTag
 //------------------------------------------------------------
 
 export const SharedVariableContext = createContext(null);
@@ -27,10 +27,9 @@ const DataSourceRenderer = ({ configured, useDataSource, query, widgetId, dataRe
   const [prevView, setPrevView] = useState(null)
   const [goBackHovered, setGoBackHovered] = useState(false)
   const [homeHovered, setHomeHovered] = useState(false)
-  const [seeFilesHovered, setSeeFilesHovered] = useState(false);
-  const [geoTagHovered, setGeoTagHovered] = useState(false);
+  const [seeFilesHovered, setSeeFilesHovered] = useState(false)
+  const [geoTagHovered, setGeoTagHovered] = useState(false)
   const [settingsHovered, setSettingsHovered] = useState(false)
-  const mainViews = ['home', 'seeFiles', 'geoTag', 'settings']
 
   // --------------- Shared Variables ---------------------------
   const [credentials, setCredentials] = useState({
@@ -46,10 +45,10 @@ const DataSourceRenderer = ({ configured, useDataSource, query, widgetId, dataRe
   const [folderFinalId, setFolderFinalId] = useState(null)
   const [fileId, setFileId] = useState(null)
   const [fileName, setFileName] = useState(null)
-
   const [fileTags, setFileTags] = useState(null)
-
   const [nameTag, setNameTag] = useState(null)
+  const [downloadIcons] = useState(["dwg", "url", "xlsx", "pptx", "vsdx", "docx", "zip", "csv"])
+  const [imageExtensions] = useState(["jpg", "jpeg", "png", "gif", "bmp", "tiff", "tif", "ico", "svg", "webp"])
 
   // ----------------------------------------------------------
 
@@ -92,7 +91,7 @@ const DataSourceRenderer = ({ configured, useDataSource, query, widgetId, dataRe
             </button>
           }
           <Spacer y={0.5} />
-          {view === 'seeFiles'
+          {view === 'seeFiles'|| view === 'seeTaggedFiles'
             ? <button className='ButtonSelected' onClick={() => { if (view !== 'seeFiles') setPrevView('seeFiles'); setView('seeFiles'); setTitle('See GeoTagged Files') }}>
               <img src={String(BlackIcons.EyeFileIconBlack)} /> <br />
             </button>
@@ -121,7 +120,7 @@ const DataSourceRenderer = ({ configured, useDataSource, query, widgetId, dataRe
           <Spacer y={0.5} />
         </div>
         <div className="body">
-          <SharedVariableContext.Provider value={{ credentials, setCredentials, siteName, setSiteName, token, setToken, siteId, setSiteId, siteWebUrl, setSiteWebUrl, folderId, setFolderId, folderFinalId, setFolderFinalId, fileId, setFileId, fileName, setFileName, fileTags, setFileTags, nameTag, setNameTag }}>
+          <SharedVariableContext.Provider value={{ credentials, setCredentials, siteName, setSiteName, token, setToken, siteId, setSiteId, siteWebUrl, setSiteWebUrl, folderId, setFolderId, folderFinalId, setFolderFinalId, fileId, setFileId, fileName, setFileName, fileTags, setFileTags, nameTag, setNameTag, downloadIcons,imageExtensions }}>
             {view === 'home' && <HomeView setView={setView} setPrevView={setPrevView} />}
             {view === 'seeFiles' && <SeeFilesView
               setView={setView}
