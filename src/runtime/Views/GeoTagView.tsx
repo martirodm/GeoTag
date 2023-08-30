@@ -7,7 +7,7 @@ import List from '@mui/material/List'
 import Tooltip from '@mui/material/Tooltip'
 import IconButton from '@mui/material/IconButton'
 import Skeleton from '@mui/material/Skeleton'
-import '../../assets/stylesheets/css.css'
+import '../../assets/stylesheets/geotag.css'
 
 import * as FileExpIcons from '../../assets/images/FileExplorer/indexFileExp'
 

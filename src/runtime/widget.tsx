@@ -43,7 +43,9 @@ export default function Widget(props: AllWidgetProps<{}>) { // Function Componen
 
   const dataRender = (ds: DataSource, onButtonClick) => {
     if (!ds || ds.getStatus() !== DataSourceStatus.Loaded || ds.getRecords().length === 0) {
-      return <div>Please select a PopUp</div>;
+      return (
+          <div className="no-popup">Please select a PopUp.</div>
+      );
     }
 
     const groupedRecords = ds.getRecords().reduce((acc, record) => {

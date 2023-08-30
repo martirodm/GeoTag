@@ -182,7 +182,6 @@ const AddTagView = ({ setView, useDataSource, query, widgetId, dataRender, useMa
       {selectedTagType === 'Personalized' && (
         <div>
           <Spacer y={0.5} />
-
           <TextField
             type='text'
             value={tag || ''}

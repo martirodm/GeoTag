@@ -57,33 +57,3 @@
 .BodyTag input::-webkit-input-placeholder {
     color: #c8c8c8;
 }
-
-.Body .MuiTextField-root {
-    outline: 2px solid #f5f5f5;
-    border-radius: 5px;
-    background: transparent !important;
-    color: whitesmoke;
-    min-width: 340px;
-}
-
-.Body .MuiFilledInput-root {
-    background-color: transparent !important;
-}
-
-.Body .MuiFilledInput-input {
-    color: whitesmoke;
-    font-size: 13.5px;
-}
-
-.Body .MuiInputLabel-root {
-    color: lightgrey !important;
-}
-
-/* Override focused styles */
-.Body .MuiInputLabel-filled.Mui-focused {
-    color: lightgrey;
-}
-
-.Body .MuiFilledInput-underline:after {
-    border-bottom-color: whitesmoke;
-}
