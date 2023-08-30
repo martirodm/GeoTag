@@ -16,9 +16,7 @@ Developed by GeoSYS
 
 -Improve Go Back Arrow, only displays when necessary
 
--AddTag System
-
--See GeoTagged Files
+-Solve special character name issue ( # & = + )
 
 -Widget personalization (Settings)
 
