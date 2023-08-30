@@ -16,6 +16,7 @@ import SettingsView from './Views/SettingsView'
 import AppCredentialsView from './Views/AppCredentialsView'
 import SiteNameView from './Views/SiteNameView'
 import AddTagView from './Views/AddTagView'
+import SeeTaggedFilesView from './Views/SeeTaggedFilesView'
 //------------------------------------------------------------
 
 export const SharedVariableContext = createContext(null);
@@ -57,6 +58,9 @@ const DataSourceRenderer = ({ configured, useDataSource, query, widgetId, dataRe
   const [fileName, setFileName] = useState(null)
 
   const [fileTags, setFileTags] = useState(null)
+
+  const [nameTag, setNameTag] = useState(null)
+
   // ----------------------------------------------------------
 
   if (view === prevView) {
@@ -128,14 +132,16 @@ const DataSourceRenderer = ({ configured, useDataSource, query, widgetId, dataRe
           <Spacer y={0.5} />
         </div>
         <div className="body">
-          <SharedVariableContext.Provider value={{ credentials, setCredentials, siteName, setSiteName, token, setToken, siteId, setSiteId, siteWebUrl, setSiteWebUrl, folderId, setFolderId, folderFinalId, setFolderFinalId, fileId, setFileId, fileName, setFileName, fileTags, setFileTags }}>
+          <SharedVariableContext.Provider value={{ credentials, setCredentials, siteName, setSiteName, token, setToken, siteId, setSiteId, siteWebUrl, setSiteWebUrl, folderId, setFolderId, folderFinalId, setFolderFinalId, fileId, setFileId, fileName, setFileName, fileTags, setFileTags, nameTag, setNameTag }}>
             {view === 'home' && <HomeView setView={setView} setPrevView={setPrevView} />}
             {view === 'seeFiles' && <SeeFilesView
+              setView={setView}
+              setPrevView={setPrevView}
               useDataSource={useDataSource}
               query={query}
               widgetId={widgetId}
-              queryCount
               dataRender={dataRender}
+              useMapWidgetIds={useMapWidgetIds}
             />}
             {view === 'geoTag' && <GeoTagView setView={setView} setPrevView={setPrevView} />}
             {view === 'settings' && <SettingsView />}
@@ -149,6 +155,7 @@ const DataSourceRenderer = ({ configured, useDataSource, query, widgetId, dataRe
               dataRender={dataRender}
               useMapWidgetIds={useMapWidgetIds}
             />}
+            {view === 'seeTaggedFiles' && <SeeTaggedFilesView />}
           </SharedVariableContext.Provider>
         </div>
       </div>
