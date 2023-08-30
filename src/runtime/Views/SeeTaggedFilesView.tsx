@@ -15,8 +15,7 @@ const FileListItem = ({ file }) => {
   const [seeHovered, setSeeHovered] = useState(false)
   const [openHovered, setOpenHovered] = useState(false)
   const [fileHovered, setFileHovered] = useState(false)
-  const downloadIcons = ["url", "zip", "dwg"]
-  const officeIcons = ["xlsx", "pptx", "vsdx", "docx", "csv"]
+  const downloadIcons = ["dwg", "url", "xlsx", "pptx", "vsdx", "docx", "zip", "csv"]
 
   return (
     <ListItem secondaryAction={
@@ -26,11 +25,7 @@ const FileListItem = ({ file }) => {
             <IconButton edge="end" aria-label="download" onClick={(e) => {
               e.stopPropagation()
               const tempLink = document.createElement("a")
-              if (file.icon == "dwg") {
-                tempLink.href = file.dwgdownloadurl
-              } else {
-                tempLink.href = file.downloadurl
-              }
+              tempLink.href = file.dwgdownloadurl
               tempLink.setAttribute("download", "")
               tempLink.setAttribute("target", "_blank")
               document.body.appendChild(tempLink)
@@ -43,9 +38,16 @@ const FileListItem = ({ file }) => {
           </Tooltip>
 
         )}
-        {(!officeIcons.includes(file.icon) && !downloadIcons.includes(file.icon)) && (
+        {!downloadIcons.includes(file.icon) && (
           <Tooltip title="Open File" disableInteractive>
-            <IconButton edge="end" aria-label="open" onClick={(e) => { e.stopPropagation(); window.open(file.downloadurl, '_blank') }} onMouseEnter={() => setOpenHovered(true)} onMouseLeave={() => setOpenHovered(false)}>
+            <IconButton edge="end" aria-label="open" onClick={(e) => {
+              e.stopPropagation();
+              if (file.icon == "jpg") {
+                window.open(file.dwgdownloadurl, '_blank')
+              } else {
+                window.open(file.downloadurl, '_blank')
+              }
+            }} onMouseEnter={() => setOpenHovered(true)} onMouseLeave={() => setOpenHovered(false)}>
               <img src={openHovered ? FileExpIcons.OpenIconHover : FileExpIcons.OpenIcon} />
             </IconButton>
           </Tooltip>
@@ -56,12 +58,10 @@ const FileListItem = ({ file }) => {
 
       onClick={(e) => {
         e.stopPropagation();
-        if (file.icon == "dwg") {
+        if (downloadIcons.includes(file.icon)) {
           window.open(file.dwgpreviewurl, '_blank')
-         } else {
-          officeIcons.includes(file.icon)
-            ? window.open(file.downloadurl, '_blank')
-            : window.open(file.previewurl, '_blank')
+        } else {
+          window.open(file.previewurl, '_blank')
         }
       }}
       onMouseEnter={() => setFileHovered(true)} onMouseLeave={() => setFileHovered(false)}
@@ -89,6 +89,7 @@ const SeeTaggedFilesView = () => {
   const { siteId, nameTag, siteWebUrl } = useContext(SharedVariableContext)
   const [loading, setLoading] = useState(true)
   const [files, setFiles] = useState([])
+  const downloadIcons = ["dwg", "url", "xlsx", "pptx", "vsdx", "docx", "zip", "csv"]
 
   function getFileExtension(filename) {
     let parts1 = filename.split('.');
@@ -153,7 +154,7 @@ const SeeTaggedFilesView = () => {
             icon: getFileExtension(file.name),
           }
 
-          if (getFileExtension(file.name) == "dwg") {
+          if (downloadIcons.includes(getFileExtension(file.name))) {
             console.log("Name: " + file.name)
             console.log("ID: " + file.id)
 
