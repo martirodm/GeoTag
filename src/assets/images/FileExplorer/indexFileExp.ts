@@ -8,3 +8,5 @@ export const SeeIcon = require('./See.svg');
 export const SeeIconHover = require('./SeeHover.svg');
 export const OpenIcon = require('./Open.svg');
 export const OpenIconHover = require('./OpenHover.svg');
+export const DeleteIcon = require('./Delete.svg');
+export const DeleteIconHover = require('./DeleteHover.svg');
