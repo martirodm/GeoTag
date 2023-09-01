@@ -16,8 +16,7 @@ const FileListItem = ({ file }) => {
   const [seeHovered, setSeeHovered] = useState(false)
   const [openHovered, setOpenHovered] = useState(false)
   const [fileHovered, setFileHovered] = useState(false)
-  
-  console.log(file.icon)
+
   return (
     <ListItem secondaryAction={
       <div>
@@ -26,7 +25,7 @@ const FileListItem = ({ file }) => {
             <IconButton edge="end" aria-label="download" onClick={(e) => {
               e.stopPropagation()
               const tempLink = document.createElement("a")
-              tempLink.href = file.dwgdownloadurl
+              tempLink.href = file.downloadurl
               tempLink.setAttribute("download", "")
               tempLink.setAttribute("target", "_blank")
               document.body.appendChild(tempLink)
@@ -41,11 +40,7 @@ const FileListItem = ({ file }) => {
           <Tooltip title="Open File" disableInteractive>
             <IconButton edge="end" aria-label="open" onClick={(e) => {
               e.stopPropagation();
-              if (imageExtensions.includes(file.icon)) {
-                window.open(file.dwgdownloadurl, '_blank')
-              } else {
-                window.open(file.downloadurl, '_blank')
-              }
+              window.open(file.downloadurl, '_blank')
             }} onMouseEnter={() => setOpenHovered(true)} onMouseLeave={() => setOpenHovered(false)}>
               <img src={openHovered ? FileExpIcons.OpenIconHover : FileExpIcons.OpenIcon} />
             </IconButton>
@@ -57,11 +52,7 @@ const FileListItem = ({ file }) => {
 
       onClick={(e) => {
         e.stopPropagation();
-        if (downloadIcons.includes(file.icon) || imageExtensions.includes(file.icon)) {
-          window.open(file.dwgpreviewurl, '_blank')
-        } else {
-          window.open(file.previewurl, '_blank')
-        }
+        window.open(file.previewurl, '_blank')
       }}
       onMouseEnter={() => setFileHovered(true)} onMouseLeave={() => setFileHovered(false)}
       style={{ backgroundColor: fileHovered ? '#161b22' : 'transparent', cursor: 'pointer' }}
@@ -85,7 +76,7 @@ const FileListItem = ({ file }) => {
 }
 
 const SeeTaggedFilesView = () => {
-  const { siteId, nameTag, siteWebUrl, downloadIcons, imageExtensions } = useContext(SharedVariableContext)
+  const { siteId, nameTag, siteWebUrl, downloadIcons, imageExtensions, cacheFiles, setCacheFiles } = useContext(SharedVariableContext)
   const [loading, setLoading] = useState(true)
   const [files, setFiles] = useState([])
 
@@ -124,63 +115,73 @@ const SeeTaggedFilesView = () => {
           siteUrlName = parts2[1].split("/")[0]
         }
 
-        for (let file of dataFiles) {
+        //FILES THAT HAVE BEEN JUST CREATED ON SAME SESSION
+        for (let cacheFile of cacheFiles) {
+          if (cacheFile.taglabel === nameTag) {
 
-          let parsedUrl = new URL(file.webUrl)
-          let newUrl = parsedUrl.pathname
-          let parts3 = newUrl.split('/')
-          parts3.pop()
-          let newUrl2 = parts3.join('/')
-          let previewUrl = siteWebUrl + "/Shared%20Documents/Forms/AllItems.aspx?id=" + newUrl + "&parent=" + newUrl2
-
-          interface FileData {
-            id: any
-            name: any
-            downloadurl: any
-            previewurl: string
-            icon: any
-            dwgdownloadurl?: any
-            dwgpreviewurl?: any
-          }
-
-
-          let fileData: FileData = {
-            id: file.id,
-            name: file.name,
-            downloadurl: file.webUrl,
-            previewurl: previewUrl,
-            icon: getFileExtension(file.name),
-          }
-
-          if (downloadIcons.includes(getFileExtension(file.name)) || imageExtensions.includes(getFileExtension(file.name)) ) {
-            console.log("Name: " + file.name)
-            console.log("ID: " + file.id)
-
-            const dataDWGResponse = await fetch("http://localhost:3002/get-DWGfile", {
+            const dataCacheFileResponse = await fetch("http://localhost:3002/seeDataTaggedFile", {
               headers: {
                 'siteId': siteId,
-                'fileId': file.id
+                'fileId': cacheFile.fileid
               }
             })
-            const dataDWG = await dataDWGResponse.json()
-            console.log(dataDWG)
+            const dataCacheFile = await dataCacheFileResponse.json()
 
-            let DWGparsedUrl = new URL(dataDWG.listItem.webUrl)
-            let DWGnewUrl = DWGparsedUrl.pathname
-            let DWGparts3 = DWGnewUrl.split('/')
-            DWGparts3.pop()
-            let DWGnewUrl2 = DWGparts3.join('/')
-            let DWGPreviewUrl = siteWebUrl + "/Shared%20Documents/Forms/AllItems.aspx?id=" + DWGnewUrl + "&parent=" + DWGnewUrl2
+            let CacheFileparsedUrl = new URL(dataCacheFile.listItem.webUrl)
+            let CacheFilenewUrl = CacheFileparsedUrl.pathname
+            let CacheFileparts3 = CacheFilenewUrl.split('/')
+            CacheFileparts3.pop()
+            let CacheFilenewUrl2 = CacheFileparts3.join('/')
+            let CacheFilePreviewUrl = siteWebUrl + "/Shared%20Documents/Forms/AllItems.aspx?id=" + CacheFilenewUrl + "&parent=" + CacheFilenewUrl2
 
-            fileData.dwgdownloadurl = dataDWG.listItem.webUrl
-            fileData.dwgpreviewurl = DWGPreviewUrl
+            let fileData2 = {
+              id: dataCacheFile.id,
+              name: dataCacheFile.name,
+              downloadurl: dataCacheFile.listItem.webUrl,
+              previewurl: CacheFilePreviewUrl,
+              icon: getFileExtension(dataCacheFile.name),
+            }
+            filesData.push(fileData2)
+          }
+        }
 
+        for (let file of dataFiles) {
+
+          //If file already exists on filesData && cacheFiles, delete it from there to avoid duplications
+          if (filesData.some(fileDataItem => fileDataItem.name === file.name)) {
+            filesData = filesData.filter(fileDataItem => fileDataItem.name !== file.name)
+            const cacheFiles2 = cacheFiles.filter(item => item.filename !== file.name)
+            setCacheFiles(cacheFiles2)
+        }
+
+          const dataTaggedFileResponse = await fetch("http://localhost:3002/seeDataTaggedFile", {
+            headers: {
+              'siteId': siteId,
+              'fileId': file.id
+            }
+          })
+          const dataTaggedFile = await dataTaggedFileResponse.json()
+
+          let TaggedFileparsedUrl = new URL(dataTaggedFile.listItem.webUrl)
+          let TaggedFilenewUrl = TaggedFileparsedUrl.pathname
+          let TaggedFileparts3 = TaggedFilenewUrl.split('/')
+          TaggedFileparts3.pop()
+          let TaggedFilenewUrl2 = TaggedFileparts3.join('/')
+          let previewUrl = siteWebUrl + "/Shared%20Documents/Forms/AllItems.aspx?id=" + TaggedFilenewUrl + "&parent=" + TaggedFilenewUrl2
+
+          let fileData = {
+            id: dataTaggedFile.id,
+            name: dataTaggedFile.name,
+            downloadurl: dataTaggedFile.listItem.webUrl,
+            previewurl: previewUrl,
+            icon: getFileExtension(dataTaggedFile.name),
           }
 
           filesData.push(fileData)
-
         }
 
+        console.log(cacheFiles)
+        console.log(filesData)
         setFiles(filesData)
       } catch (error) {
         console.error("Error fetching data:", error)
