@@ -187,7 +187,16 @@ const GeoTagView = ({ setView, setPrevView }) => {
           let parts = newUrl.split('/')
           parts.pop()
           let newUrl2 = parts.join('/')
-          let previewUrl = siteWebUrl + "/Shared%20Documents/Forms/AllItems.aspx?id=" + newUrl + "&parent=" + newUrl2
+          let previewUrl;
+
+          if (/[#&=+]/.test(file.listItem.fields.FileLeafRef)) {
+            // If the file name contains #, &, =, or +, encode it
+            previewUrl = siteWebUrl + "/Shared%20Documents/Forms/AllItems.aspx?id=" + newUrl.replace(/#/g, '%23').replace(/&/g, '%26').replace(/=/g, '%3D').replace(/\+/g, '%2B') + "&parent=" + newUrl2.replace(/#/g, '%23').replace(/&/g, '%26').replace(/=/g, '%3D').replace(/\+/g, '%2B');
+          } else {
+            // If the file name doesn't contain problematic characters, use it as is
+            previewUrl = siteWebUrl + "/Shared%20Documents/Forms/AllItems.aspx?id=" + newUrl + "&parent=" + newUrl2;
+          }
+
           let fileData = {
             id: getValueInsideBraces(file.eTag),
             name: file.listItem.fields.FileLeafRef,
