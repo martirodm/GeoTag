@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
+import { Button, styled } from '@mui/material'
 import { SharedVariableContext } from '../widgetUI'
 import ListItem from '@mui/material/ListItem'
 import ListItemIcon from '@mui/material/ListItemIcon'
@@ -7,15 +8,46 @@ import List from '@mui/material/List'
 import Tooltip from '@mui/material/Tooltip'
 import IconButton from '@mui/material/IconButton'
 import Skeleton from '@mui/material/Skeleton'
+import Box from '@mui/material/Box'
+import Typography from '@mui/material/Typography'
+import Modal from '@mui/material/Modal'
+
 import '../../assets/stylesheets/css.css'
 
 import * as FileExpIcons from '../../assets/images/FileExplorer/indexFileExp'
 
 const FileListItem = ({ file }) => {
-  const { downloadIcons, imageExtensions } = useContext(SharedVariableContext)
+  const { downloadIcons, imageExtensions, nameTag } = useContext(SharedVariableContext)
   const [seeHovered, setSeeHovered] = useState(false)
   const [openHovered, setOpenHovered] = useState(false)
   const [fileHovered, setFileHovered] = useState(false)
+  const [deleteHovered, setDelteHovered] = useState(false)
+  const [modalState, setModalState] = useState<'closed' | 'firstModal' | 'successModal' | 'errorModal'>('closed');
+
+  const handleOpen = () => {
+    setModalState('firstModal')
+  }
+
+  const StyledButton = styled(Button)({
+    marginRight: '7px',
+    marginLeft: '7px',
+    marginTop: '10px',
+  })
+
+  const style = {
+    color: 'whitesmoke',
+    position: 'absolute' as 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 400,
+    bgcolor: '#23272f',
+    border: '2px solid #23272f',
+    borderRadius: '10px',
+    boxShadow: 24,
+    p: 4,
+    textAlign: 'center',
+  }
 
   return (
     <ListItem secondaryAction={
@@ -31,7 +63,6 @@ const FileListItem = ({ file }) => {
               document.body.appendChild(tempLink)
               tempLink.click()
               document.body.removeChild(tempLink)
-
             }} onMouseEnter={() => setOpenHovered(true)} onMouseLeave={() => setOpenHovered(false)}>
               <img src={openHovered ? FileExpIcons.DownloadIconHover : FileExpIcons.DownloadIcon} />
             </IconButton>
@@ -47,6 +78,11 @@ const FileListItem = ({ file }) => {
           </Tooltip>
         )}
 
+        <Tooltip title="Delete File" disableInteractive>
+          <IconButton edge="end" aria-label="delete" onClick={() => handleOpen()} onMouseEnter={() => setDelteHovered(true)} onMouseLeave={() => setDelteHovered(false)}>
+            <img src={deleteHovered ? FileExpIcons.DeleteIconHover : FileExpIcons.DeleteIcon} />
+          </IconButton>
+        </Tooltip>
       </div >
     }
 
@@ -56,7 +92,7 @@ const FileListItem = ({ file }) => {
       }}
       onMouseEnter={() => setFileHovered(true)} onMouseLeave={() => setFileHovered(false)}
       style={{ backgroundColor: fileHovered ? '#161b22' : 'transparent', cursor: 'pointer' }}
-      key={file.id} >
+      key={file.id}>
 
       <ListItemIcon style={{ marginRight: '-20px', marginLeft: '-10px' }}>
         <img src={fileHovered ? FileExpIcons.FileIconHover : FileExpIcons.FileIcon} />
@@ -66,11 +102,51 @@ const FileListItem = ({ file }) => {
         <ListItemText
           primary={<div className="truncate">{file.name}</div>}
           style={{
-            /* color: fileHovered ? '#c8c8c8' : '#f5f5f5', */
             maxWidth: "210px"
           }}
         />
       </Tooltip>
+
+      <Modal
+        open={modalState !== 'closed'}
+        onClose={() => setModalState('closed')}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          {modalState === 'firstModal' && (
+            <>
+              <Typography id="modal-modal-title" variant="h6" component="h2" sx={{ fontWeight: 'bolder', color: 'whitesmoke' }}>
+                Warning
+              </Typography>
+              <Typography className='truncateTag' id="modal-modal-description" sx={{ mt: 2, whiteSpace: 'normal' }}>  {/* whiteSpace is for breaking to a new line if I have an ellipsis*/}
+                Do you want to delete the tag <span style={{ color: '#b0b0b0' }}><strong>{nameTag}</strong></span> from the file <span style={{ color: '#b0b0b0' }}><strong>{file.name}</strong></span>?
+              </Typography>
+
+              <StyledButton variant="contained" color="success">Yes</StyledButton>
+              <StyledButton variant="contained" color="error" onClick={() => setModalState('closed')}>No</StyledButton>
+            </>
+          )}
+
+          {modalState === 'successModal' && (
+            <>
+              <Typography id="modal-modal-title" variant="h6" component="h2" sx={{ fontWeight: 'bolder', color: 'whitesmoke' }}>
+                The tag has been created succesfully!
+              </Typography>
+              <StyledButton variant="contained" color="success" onClick={() => setModalState('closed')}>Close</StyledButton>
+            </>
+          )}
+
+          {modalState === 'errorModal' && (
+            <>
+              <Typography id="modal-modal-title" variant="h6" component="h2" sx={{ fontWeight: 'bolder', color: 'red' }}>
+                The file already has this tag!
+              </Typography>
+              <StyledButton variant="contained" color="success" onClick={() => setModalState('closed')}>Close</StyledButton>
+            </>
+          )}
+        </Box>
+      </Modal>
     </ListItem >
   )
 }
@@ -79,6 +155,7 @@ const SeeTaggedFilesView = () => {
   const { siteId, nameTag, siteWebUrl, downloadIcons, imageExtensions, cacheFiles, setCacheFiles } = useContext(SharedVariableContext)
   const [loading, setLoading] = useState(true)
   const [files, setFiles] = useState([])
+  const [errorMessage, setErrorMessage] = useState('')
 
   function getFileExtension(filename) {
     let parts1 = filename.split('.');
@@ -93,19 +170,27 @@ const SeeTaggedFilesView = () => {
       let dataFiles = []
       let filesData = []
       let siteUrlName: string
+      setLoading(true);
+      setErrorMessage(''); // Clear any previous error messages
 
-      setLoading(true)
       try {
+        console.log('Fetching data...');
         const dataResponse = await fetch("http://localhost:3002/seeTaggedFiles", {
           headers: {
             'siteId': siteId,
             'nameTag': nameTag
           }
-        })
-        const data = await dataResponse.json()
+        });
+
+        console.log('Data response:', dataResponse);
+
+        const data = await dataResponse.json();
+        console.log('Data:', data);
 
         if (!dataResponse.ok) {
-          throw new Error(data.message || "Unknown error occurred")
+          const errorMessage = 'The tag does not exist.';
+          setErrorMessage(errorMessage); // Set the error message.
+          throw new Error(errorMessage);
         }
 
         dataFiles = data.value
@@ -184,7 +269,7 @@ const SeeTaggedFilesView = () => {
         console.log(filesData)
         setFiles(filesData)
       } catch (error) {
-        console.error("Error fetching data:", error)
+        console.error('Error fetching data:', error);
       } finally {
         setLoading(false)
       }
@@ -195,6 +280,7 @@ const SeeTaggedFilesView = () => {
   if (loading) {
     return (
       <div className='body'>
+        {errorMessage && <div className="error-message">{errorMessage}</div>}
         <List className='scrollableList'>
           {/* Example: Assuming you want 5 folder skeletons and 5 file skeletons */}
           {[...Array(5)].map((_, index) => (
@@ -210,11 +296,15 @@ const SeeTaggedFilesView = () => {
 
   return (
     <div className='body'>
-      <List className='scrollableList'>
-        {files.map((file) => (
-          <FileListItem file={file} />
-        ))}
-      </List>
+      {errorMessage ? (
+        <div className="error-message">{errorMessage}</div>  // If I have an error (don't enter a valid tag).
+      ) : (
+        <List className='scrollableList'>
+          {files.map((file) => (
+            <FileListItem file={file} />
+          ))}
+        </List>
+      )}
     </div>
   )
 }
@@ -239,6 +329,5 @@ const SkeletonListItem = () => {
     </ListItem>
   )
 }
-
 
 export default SeeTaggedFilesView

@@ -90,9 +90,15 @@ const AppCredentialsView = ({ setView }) => {
         <br />
         <br />
         <ColoredLoadingButton
-          type='submit'
+          color="success"
+          size="small"
           loading={loading}
-          startIcon={<SendIcon />}
+          loadingPosition="end"
+          endIcon={<SendIcon />}
+          variant="contained"
+          type="submit"
+          loadingIndicator={<ColoredCircularProgress size={20} />}
+          style={{ color: '#f5f5f5' }}
         >
           Submit
         </ColoredLoadingButton>

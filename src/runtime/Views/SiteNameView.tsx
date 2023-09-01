@@ -88,7 +88,7 @@ const SiteNameView = ({ setView }) => {
               loadingIndicator={<ColoredCircularProgress size={20} />}
               style={{ color: '#f5f5f5' }}
             >
-              Send
+              Submit
             </ColoredLoadingButton>
           </center>
         </div>
