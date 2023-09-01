@@ -30,13 +30,19 @@ const AnimatedUnderlineButton = styled(Button)(({ theme }) => ({
 }));
 
 const SeeFilesView = ({ setView, setPrevView, useDataSource, query, widgetId, dataRender, useMapWidgetIds }) => {
-  const { nameTag, setNameTag } = useContext(SharedVariableContext)
+  const { nameTag, setNameTag, token, siteId } = useContext(SharedVariableContext)
   const [selectedTagType, setSelectedTagType] = useState(null)
   const [latitude, setLatitude] = useState<string>('')
   const [longitude, setLongitude] = useState<string>('')
   const CoordTagRef = React.useRef(null)
   const FieldTagRef = React.useRef(null)
   const [activeButton, setActiveButton] = useState<string | null>(null);
+
+  if (!(token && siteId)) {
+    return (
+      <div className="no-credentials">Please add credentials.</div>
+    )
+  }
 
   const activeViewChangeHandler = (jmv: JimuMapView) => {
     if (jmv) {

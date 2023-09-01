@@ -82,7 +82,8 @@ h3 {
 
 .no-credentials,
 .no-popup,
-.empty-folder-message {
+.empty-folder-message,
+.error-message {
     text-align: center;
     font-size: 20px;
     margin: 15%;
