@@ -33,8 +33,8 @@ const AnimatedUnderlineButton = styled(Button)(({ theme }) => ({
 }));
 
 const AddTagView = ({ setView, useDataSource, query, widgetId, dataRender, useMapWidgetIds }) => {
-  const { folderId, fileId, fileTags, setFileTags, fileName, token, siteId } = useContext(SharedVariableContext)
-  const [selectedTagType, setSelectedTagType] = useState(null);
+  const { folderId, fileId, fileTags, setFileTags, fileName, token, siteId, cacheFiles, setCacheFiles } = useContext(SharedVariableContext)
+  const [selectedTagType, setSelectedTagType] = useState(null)
   const [latitude, setLatitude] = useState<string>('')
   const [longitude, setLongitude] = useState<string>('')
   const [open, setOpen] = React.useState(false)
@@ -42,7 +42,7 @@ const AddTagView = ({ setView, useDataSource, query, widgetId, dataRender, useMa
   const [tag, setTag] = React.useState(null)
   const CoordTagRef = React.useRef(null)
   const FieldTagRef = React.useRef(null)
-  const [activeButton, setActiveButton] = useState<string | null>(null);
+  const [activeButton, setActiveButton] = useState<string | null>(null)
   const [modalState, setModalState] = useState<'closed' | 'firstModal' | 'successModal' | 'errorModal'>('closed');
 
   const handleOpen = (ref, name) => {
@@ -56,7 +56,7 @@ const AddTagView = ({ setView, useDataSource, query, widgetId, dataRender, useMa
   const handleClose = () => setOpen(false)
 
   const handleAdd = () => {
-    console.log(fileTags)
+    //console.log(fileTags)
     if (fileTags.map(tag => tag.label.toLowerCase()).includes(tag.toLowerCase())) {
       console.log("The file already has this tag!")
       setModalState('errorModal')
@@ -75,7 +75,8 @@ const AddTagView = ({ setView, useDataSource, query, widgetId, dataRender, useMa
           })
         })
         const data = await dataResponse.json()
-        setFileTags(fileTags => [...fileTags, data]);
+        setFileTags(fileTags => [...fileTags, data])
+        setCacheFiles(cacheFiles => [...cacheFiles, {fileid: fileId, filename: fileName, taglabel: data.label, tagguid: data.termGuid}])
         setModalState('successModal')
       }
       addTag()

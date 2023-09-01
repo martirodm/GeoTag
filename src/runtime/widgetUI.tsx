@@ -47,6 +47,7 @@ const DataSourceRenderer = ({ configured, useDataSource, query, widgetId, dataRe
   const [fileName, setFileName] = useState(null)
   const [fileTags, setFileTags] = useState(null)
   const [nameTag, setNameTag] = useState(null)
+  const [cacheFiles, setCacheFiles] = useState([])
   const [downloadIcons] = useState(["dwg", "url", "xlsx", "pptx", "vsdx", "docx", "zip", "csv"])
   const [imageExtensions] = useState(["jpg", "jpeg", "png", "gif", "bmp", "tiff", "tif", "ico", "svg", "webp"])
 
@@ -120,7 +121,7 @@ const DataSourceRenderer = ({ configured, useDataSource, query, widgetId, dataRe
           <Spacer y={0.5} />
         </div>
         <div className="body">
-          <SharedVariableContext.Provider value={{ credentials, setCredentials, siteName, setSiteName, token, setToken, siteId, setSiteId, siteWebUrl, setSiteWebUrl, folderId, setFolderId, folderFinalId, setFolderFinalId, fileId, setFileId, fileName, setFileName, fileTags, setFileTags, nameTag, setNameTag, downloadIcons,imageExtensions }}>
+          <SharedVariableContext.Provider value={{ credentials, setCredentials, siteName, setSiteName, token, setToken, siteId, setSiteId, siteWebUrl, setSiteWebUrl, folderId, setFolderId, folderFinalId, setFolderFinalId, fileId, setFileId, fileName, setFileName, fileTags, setFileTags, nameTag, setNameTag, cacheFiles, setCacheFiles, downloadIcons,imageExtensions }}>
             {view === 'home' && <HomeView setView={setView} setPrevView={setPrevView} />}
             {view === 'seeFiles' && <SeeFilesView
               setView={setView}
