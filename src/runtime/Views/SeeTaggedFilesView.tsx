@@ -70,7 +70,7 @@ const FileListItem = ({ file }) => {
         ) : (
           <Tooltip title="Open File" disableInteractive>
             <IconButton edge="end" aria-label="open" onClick={(e) => {
-              e.stopPropagation();
+              e.stopPropagation()
               window.open(file.downloadurl, '_blank')
             }} onMouseEnter={() => setOpenHovered(true)} onMouseLeave={() => setOpenHovered(false)}>
               <img src={openHovered ? FileExpIcons.OpenIconHover : FileExpIcons.OpenIcon} />
@@ -79,7 +79,10 @@ const FileListItem = ({ file }) => {
         )}
 
         <Tooltip title="Delete File" disableInteractive>
-          <IconButton edge="end" aria-label="delete" onClick={() => handleOpen()} onMouseEnter={() => setDelteHovered(true)} onMouseLeave={() => setDelteHovered(false)}>
+          <IconButton edge="end" aria-label="delete" onClick={(e) => {
+            e.stopPropagation()
+            handleOpen()
+          }} onMouseEnter={() => setDelteHovered(true)} onMouseLeave={() => setDelteHovered(false)}>
             <img src={deleteHovered ? FileExpIcons.DeleteIconHover : FileExpIcons.DeleteIcon} />
           </IconButton>
         </Tooltip>
@@ -123,26 +126,26 @@ const FileListItem = ({ file }) => {
                 Do you want to delete the tag <span style={{ color: '#b0b0b0' }}><strong>{nameTag}</strong></span> from the file <span style={{ color: '#b0b0b0' }}><strong>{file.name}</strong></span>?
               </Typography>
 
-              <StyledButton variant="contained" color="success">Yes</StyledButton>
-              <StyledButton variant="contained" color="error" onClick={() => setModalState('closed')}>No</StyledButton>
+              <StyledButton variant="contained" color="success" onClick={(e) => { e.stopPropagation(), console.log("Selected delete") }}>Yes</StyledButton>
+              <StyledButton variant="contained" color="error" onClick={(e) => { e.stopPropagation(), setModalState('closed') }}>No</StyledButton>
             </>
           )}
 
           {modalState === 'successModal' && (
             <>
               <Typography id="modal-modal-title" variant="h6" component="h2" sx={{ fontWeight: 'bolder', color: 'whitesmoke' }}>
-                The tag has been created succesfully!
+                The tag has been deleted succesfully!
               </Typography>
-              <StyledButton variant="contained" color="success" onClick={() => setModalState('closed')}>Close</StyledButton>
+              <StyledButton variant="contained" color="success" onClick={(e) => { e.stopPropagation(), setModalState('closed') }}>Close</StyledButton>
             </>
           )}
 
           {modalState === 'errorModal' && (
             <>
               <Typography id="modal-modal-title" variant="h6" component="h2" sx={{ fontWeight: 'bolder', color: 'red' }}>
-                The file already has this tag!
+                You already deleted this tag!
               </Typography>
-              <StyledButton variant="contained" color="success" onClick={() => setModalState('closed')}>Close</StyledButton>
+              <StyledButton variant="contained" color="success" onClick={(e) => { e.stopPropagation(), setModalState('closed') }}>Close</StyledButton>
             </>
           )}
         </Box>
@@ -237,7 +240,7 @@ const SeeTaggedFilesView = () => {
             filesData = filesData.filter(fileDataItem => fileDataItem.name !== file.name)
             const cacheFiles2 = cacheFiles.filter(item => item.filename !== file.name)
             setCacheFiles(cacheFiles2)
-        }
+          }
 
           const dataTaggedFileResponse = await fetch("http://localhost:3002/seeDataTaggedFile", {
             headers: {
@@ -312,19 +315,26 @@ const SeeTaggedFilesView = () => {
 const SkeletonListItem = () => {
   return (
     <ListItem secondaryAction={
-      <IconButton>
-        <div style={{ width: 20, height: 20, overflow: 'hidden' }}>
-          <Skeleton variant="rectangular" width="100%" height="100%" style={{ backgroundColor: '#c8c8c8' }} />
-        </div>
-      </IconButton>
+      <>
+        <IconButton>
+          <div style={{ width: 20, height: 20, overflow: 'hidden', marginRight: '-12px', marginTop: '-10px' }}>
+            <Skeleton variant="rectangular" width="100%" height="100%" style={{ backgroundColor: '#c8c8c8' }} />
+          </div>
+        </IconButton>
+        <IconButton>
+          <div style={{ width: 20, height: 20, overflow: 'hidden', marginRight: '-20px', marginTop: '-10px' }}>
+            <Skeleton variant="rectangular" width="100%" height="100%" style={{ backgroundColor: '#c8c8c8' }} />
+          </div>
+        </IconButton>
+      </>
     }>
       <ListItemIcon>
-        <div style={{ width: 20, height: 20, overflow: 'hidden', marginRight: '-60px', marginLeft: '-8px' }}>
+        <div style={{ width: 20, height: 20, overflow: 'hidden', marginRight: '-60px', marginLeft: '-8px', marginTop: '-5px' }}>
           <Skeleton variant="circular" width="100%" height="100%" style={{ backgroundColor: '#c8c8c8' }} />
         </div>
       </ListItemIcon>
       <ListItemText
-        primary={<Skeleton variant="text" width="60%" style={{ backgroundColor: '#c8c8c8', marginLeft: '-25px' }} />}
+        primary={<Skeleton variant="text" width="60%" style={{ backgroundColor: '#c8c8c8', marginLeft: '-25px', marginTop: '-5px' }} />}
       />
     </ListItem>
   )
