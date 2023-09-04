@@ -22,6 +22,7 @@ const FileListItem = ({ file }) => {
   const [openHovered, setOpenHovered] = useState(false)
   const [fileHovered, setFileHovered] = useState(false)
   const [deleteHovered, setDelteHovered] = useState(false)
+  const [actualFileTags, setActualFileTags] = useState(false)
   const [modalState, setModalState] = useState<'closed' | 'firstModal' | 'successModal' | 'errorModal'>('closed');
 
   const handleOpen = () => {
@@ -78,7 +79,7 @@ const FileListItem = ({ file }) => {
           </Tooltip>
         )}
 
-        <Tooltip title="Delete File" disableInteractive>
+        <Tooltip title="Delete Tag" disableInteractive>
           <IconButton edge="end" aria-label="delete" onClick={(e) => {
             e.stopPropagation()
             handleOpen()
@@ -228,6 +229,7 @@ const SeeTaggedFilesView = () => {
               downloadurl: dataCacheFile.listItem.webUrl,
               previewurl: CacheFilePreviewUrl,
               icon: getFileExtension(dataCacheFile.name),
+              labels: dataCacheFile.listItem.fields.GeoTag ? dataCacheFile.listItem.fields.GeoTag.map(file2 => ({ label: file2.Label, termGuid: file2.TermGuid })) : []
             }
             filesData.push(fileData2)
           }
@@ -263,6 +265,7 @@ const SeeTaggedFilesView = () => {
             downloadurl: dataTaggedFile.listItem.webUrl,
             previewurl: previewUrl,
             icon: getFileExtension(dataTaggedFile.name),
+            labels: dataTaggedFile.listItem.fields.GeoTag ? dataTaggedFile.listItem.fields.GeoTag.map(file2 => ({ label: file2.Label, termGuid: file2.TermGuid })) : []
           }
 
           filesData.push(fileData)
