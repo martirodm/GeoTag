@@ -17,7 +17,7 @@ import '../../assets/stylesheets/css.css'
 import * as FileExpIcons from '../../assets/images/FileExplorer/indexFileExp'
 
 const FileListItem = ({ file }) => {
-  const { downloadIcons, imageExtensions, nameTag } = useContext(SharedVariableContext)
+  const { downloadIcons, imageExtensions, nameTag, siteId, setFileTags, setCacheFiles } = useContext(SharedVariableContext)
   const [seeHovered, setSeeHovered] = useState(false)
   const [openHovered, setOpenHovered] = useState(false)
   const [fileHovered, setFileHovered] = useState(false)
@@ -25,8 +25,38 @@ const FileListItem = ({ file }) => {
   const [actualFileTags, setActualFileTags] = useState(false)
   const [modalState, setModalState] = useState<'closed' | 'firstModal' | 'successModal' | 'errorModal'>('closed');
 
+  const tag = nameTag, fileTags = file.labels, fileId = file.id
+
   const handleOpen = () => {
     setModalState('firstModal')
+  }
+
+  const handleDel = () => {
+    console.log("\nTag: " + nameTag, "\n\nFile tags: ", JSON.stringify(file.labels, null, 2), "\n\nFile id: " + file.id, "\n\nSite id: " + siteId, "\n\nFile name: " + file.name);
+
+    if (!(fileTags.map(tag => tag.label.toLowerCase()).includes(tag.toLowerCase()))) {
+      console.log("The file does not have this tag!")
+      setModalState('errorModal')
+    } else {
+      const delTag = async () => {
+        const dataResponse = await fetch("http://localhost:3002/delTag", {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            'siteId': siteId
+          },
+          body: JSON.stringify({
+            tag: nameTag,
+            fileTags: file.labels,
+            fileId: file.id
+          })
+        })
+        const data = await dataResponse.json()
+        setModalState('successModal')
+        console.log("\nData:", JSON.stringify(data, null, 2));
+      }
+      delTag()
+    }
   }
 
   const StyledButton = styled(Button)({
@@ -127,7 +157,7 @@ const FileListItem = ({ file }) => {
                 Do you want to delete the tag <span style={{ color: '#b0b0b0' }}><strong>{nameTag}</strong></span> from the file <span style={{ color: '#b0b0b0' }}><strong>{file.name}</strong></span>?
               </Typography>
 
-              <StyledButton variant="contained" color="success" onClick={(e) => { e.stopPropagation(), console.log("Selected delete") }}>Yes</StyledButton>
+              <StyledButton variant="contained" color="success" onClick={(e) => { e.stopPropagation(), console.log("Selected delete") handleDel() }}>Yes</StyledButton>
               <StyledButton variant="contained" color="error" onClick={(e) => { e.stopPropagation(), setModalState('closed') }}>No</StyledButton>
             </>
           )}
@@ -168,6 +198,20 @@ const SeeTaggedFilesView = () => {
     }
     return parts1.pop();
   }
+
+  function getValueInsideBraces(str) {
+    const match = str.match(/{(.*?)}/)
+    if (match) {
+      return match[1]
+    }
+    return null
+  }
+
+  function encodeURL(url) {
+    // Encode special characters
+    return url.replace(/#/g, '%23').replace(/&/g, '%26').replace(/=/g, '%3D').replace(/\+/g, '%2B');
+  }
+
 
   useEffect(() => { //For only executing one time
     const getData = async () => {
@@ -221,16 +265,21 @@ const SeeTaggedFilesView = () => {
             let CacheFileparts3 = CacheFilenewUrl.split('/')
             CacheFileparts3.pop()
             let CacheFilenewUrl2 = CacheFileparts3.join('/')
-            let CacheFilePreviewUrl = siteWebUrl + "/Shared%20Documents/Forms/AllItems.aspx?id=" + CacheFilenewUrl + "&parent=" + CacheFilenewUrl2
+
+            const encodedCacheFilenewUrl = encodeURL(CacheFilenewUrl);
+            const encodedCacheFilenewUrl2 = encodeURL(CacheFilenewUrl2);
+
+            let CacheFilePreviewUrl = siteWebUrl + "/Shared%20Documents/Forms/AllItems.aspx?id=" + encodedCacheFilenewUrl + "&parent=" + encodedCacheFilenewUrl2;
 
             let fileData2 = {
-              id: dataCacheFile.id,
+              id: getValueInsideBraces(dataCacheFile.eTag),
               name: dataCacheFile.name,
               downloadurl: dataCacheFile.listItem.webUrl,
               previewurl: CacheFilePreviewUrl,
               icon: getFileExtension(dataCacheFile.name),
               labels: dataCacheFile.listItem.fields.GeoTag ? dataCacheFile.listItem.fields.GeoTag.map(file2 => ({ label: file2.Label, termGuid: file2.TermGuid })) : []
             }
+
             filesData.push(fileData2)
           }
         }
@@ -257,16 +306,21 @@ const SeeTaggedFilesView = () => {
           let TaggedFileparts3 = TaggedFilenewUrl.split('/')
           TaggedFileparts3.pop()
           let TaggedFilenewUrl2 = TaggedFileparts3.join('/')
-          let previewUrl = siteWebUrl + "/Shared%20Documents/Forms/AllItems.aspx?id=" + TaggedFilenewUrl + "&parent=" + TaggedFilenewUrl2
+
+          const encodedTaggedFilenewUrl = encodeURL(TaggedFilenewUrl);
+          const encodedTaggedFilenewUrl2 = encodeURL(TaggedFilenewUrl2);
+
+          let previewUrl = siteWebUrl + "/Shared%20Documents/Forms/AllItems.aspx?id=" + encodedTaggedFilenewUrl + "&parent=" + encodedTaggedFilenewUrl2;
 
           let fileData = {
-            id: dataTaggedFile.id,
+            id: getValueInsideBraces(dataTaggedFile.eTag),
             name: dataTaggedFile.name,
             downloadurl: dataTaggedFile.listItem.webUrl,
             previewurl: previewUrl,
             icon: getFileExtension(dataTaggedFile.name),
             labels: dataTaggedFile.listItem.fields.GeoTag ? dataTaggedFile.listItem.fields.GeoTag.map(file2 => ({ label: file2.Label, termGuid: file2.TermGuid })) : []
           }
+          console.log(fileData.id);
 
           filesData.push(fileData)
         }

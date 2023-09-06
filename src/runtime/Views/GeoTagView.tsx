@@ -187,7 +187,7 @@ const GeoTagView = ({ setView, setPrevView }) => {
           let parts = newUrl.split('/')
           parts.pop()
           let newUrl2 = parts.join('/')
-          let previewUrl;
+          let previewUrl
 
           if (/[#&=+]/.test(file.listItem.fields.FileLeafRef)) {
             // If the file name contains #, &, =, or +, encode it
@@ -310,6 +310,5 @@ const SkeletonListItem = () => {
     </ListItem>
   )
 }
-
 
 export default GeoTagView

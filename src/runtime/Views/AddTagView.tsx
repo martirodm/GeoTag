@@ -57,6 +57,7 @@ const AddTagView = ({ setView, useDataSource, query, widgetId, dataRender, useMa
 
   const handleAdd = () => {
     //console.log(fileTags)
+    console.log("Tag: " + tag, "File tags: " + fileTags, "File id: " + fileId);
     if (fileTags.map(tag => tag.label.toLowerCase()).includes(tag.toLowerCase())) {
       console.log("The file already has this tag!")
       setModalState('errorModal')
@@ -76,8 +77,9 @@ const AddTagView = ({ setView, useDataSource, query, widgetId, dataRender, useMa
         })
         const data = await dataResponse.json()
         setFileTags(fileTags => [...fileTags, data])
-        setCacheFiles(cacheFiles => [...cacheFiles, {fileid: fileId, filename: fileName, taglabel: data.label, tagguid: data.termGuid}])
+        setCacheFiles(cacheFiles => [...cacheFiles, { fileid: fileId, filename: fileName, taglabel: data.label, tagguid: data.termGuid }])
         setModalState('successModal')
+        console.log("\nData:", JSON.stringify(data, null, 2));
       }
       addTag()
     }
