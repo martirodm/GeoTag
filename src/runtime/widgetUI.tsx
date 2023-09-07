@@ -43,6 +43,7 @@ const DataSourceRenderer = ({ configured, useDataSource, query, widgetId, dataRe
   const [siteWebUrl, setSiteWebUrl] = useState(null)
   const [folderId, setFolderId] = useState(null)
   const [folderFinalId, setFolderFinalId] = useState(null)
+  const [historyFolders, setHistoryFolders] = useState([])
   const [fileId, setFileId] = useState(null)
   const [fileName, setFileName] = useState(null)
   const [fileTags, setFileTags] = useState(null)
@@ -76,7 +77,7 @@ const DataSourceRenderer = ({ configured, useDataSource, query, widgetId, dataRe
         <h3>{title}</h3>
         <div className='goBack'>
           {prevView &&
-            <button className='ButtonGoBack' onMouseOver={() => setGoBackHovered(true)} onMouseOut={() => setGoBackHovered(false)} onClick={() => { if (prevView == 'geoTag') { setFolderFinalId(folderId) } setView(prevView); setGoBackHovered(false); }}>
+            <button className='ButtonGoBack' onMouseOver={() => setGoBackHovered(true)} onMouseOut={() => setGoBackHovered(false)} onClick={() => { if (prevView == 'geoTag') {console.log("folder final id: "+folderId), setFolderFinalId(folderId) } setView(prevView); setGoBackHovered(false); }}>
               <img src={String(goBackHovered ? HoverIcons.GoBackIconHover : WhiteIcons.GoBackIconWhite)} />
             </button>
           }
@@ -121,7 +122,7 @@ const DataSourceRenderer = ({ configured, useDataSource, query, widgetId, dataRe
           <Spacer y={0.5} />
         </div>
         <div className="body">
-          <SharedVariableContext.Provider value={{ credentials, setCredentials, siteName, setSiteName, token, setToken, siteId, setSiteId, siteWebUrl, setSiteWebUrl, folderId, setFolderId, folderFinalId, setFolderFinalId, fileId, setFileId, fileName, setFileName, fileTags, setFileTags, nameTag, setNameTag, cacheFiles, setCacheFiles, downloadIcons,imageExtensions }}>
+          <SharedVariableContext.Provider value={{ credentials, setCredentials, siteName, setSiteName, token, setToken, siteId, setSiteId, siteWebUrl, setSiteWebUrl, folderId, setFolderId, folderFinalId, setFolderFinalId, historyFolders, setHistoryFolders, fileId, setFileId, fileName, setFileName, fileTags, setFileTags, nameTag, setNameTag, cacheFiles, setCacheFiles, downloadIcons,imageExtensions }}>
             {view === 'home' && <HomeView setView={setView} setPrevView={setPrevView} />}
             {view === 'seeFiles' && <SeeFilesView
               setView={setView}

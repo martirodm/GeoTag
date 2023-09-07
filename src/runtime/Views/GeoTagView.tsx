@@ -106,15 +106,14 @@ const FileListItem = ({ file, setView, setPrevView }) => {
 }
 
 const GeoTagView = ({ setView, setPrevView }) => {
-  const { token, siteId, siteWebUrl, folderFinalId, setFolderFinalId, folderId, setFolderId } = useContext(SharedVariableContext)
+  const { token, siteId, siteWebUrl, folderFinalId, setFolderFinalId, folderId, setFolderId, historyFolders, setHistoryFolders } = useContext(SharedVariableContext)
   const [loading, setLoading] = useState(true)
   const [folders, setFolders] = useState([])
   const [files, setFiles] = useState([])
   const [selectedFolderId, setSelectedFolderId] = useState(null)
   const [selectedFolderName, setSelectedFolderName] = useState(null)
   const [, forceUpdate] = useState(0)
-  const [historyFolders, setHistoryFolders] = useState([])
-  const [isFolderEmpty, setIsFolderEmpty] = useState(false);
+  const [isFolderEmpty, setIsFolderEmpty] = useState(false)
 
   if (!(token && siteId)) {
     return (
@@ -139,12 +138,11 @@ const GeoTagView = ({ setView, setPrevView }) => {
 
       setLoading(true)
 
-
       //console.log("final id: "+folderFinalId);
       //console.log("id: "+folderId);
       if (folderFinalId) {
         setSelectedFolderId(folderFinalId)
-        setFolderId(null)
+        //setFolderId(null)
       }
 
       if (selectedFolderId) {
@@ -155,6 +153,7 @@ const GeoTagView = ({ setView, setPrevView }) => {
           // If found, slice the array to that point; otherwise, add to the history.
           return existingIndex !== -1 ? prev.slice(0, existingIndex + 1) : [...prev, { id: selectedFolderId, name: selectedFolderName }]
         })
+        console.log(historyFolders)
       }
 
       const dataResponse = await fetch("http://localhost:3002/display-ff", {
