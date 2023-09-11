@@ -157,7 +157,7 @@ const FileListItem = ({ file }) => {
                 Do you want to delete the tag <span style={{ color: '#b0b0b0' }}><strong>{nameTag}</strong></span> from the file <span style={{ color: '#b0b0b0' }}><strong>{file.name}</strong></span>?
               </Typography>
 
-              <StyledButton variant="contained" color="success" onClick={(e) => { e.stopPropagation(), console.log("Selected delete") handleDel() }}>Yes</StyledButton>
+              <StyledButton variant="contained" color="success" onClick={(e) => { e.stopPropagation(), console.log("Selected delete"), handleDel() }}>Yes</StyledButton>
               <StyledButton variant="contained" color="error" onClick={(e) => { e.stopPropagation(), setModalState('closed') }}>No</StyledButton>
             </>
           )}
