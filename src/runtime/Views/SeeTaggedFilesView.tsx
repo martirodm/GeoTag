@@ -32,10 +32,7 @@ const FileListItem = ({ file }) => {
   }
 
   const handleDel = () => {
-    console.log("\nTag: " + nameTag, "\n\nFile tags: ", JSON.stringify(file.labels, null, 2), "\n\nFile id: " + file.id, "\n\nSite id: " + siteId, "\n\nFile name: " + file.name);
-
     if (!(fileTags.map(tag => tag.label.toLowerCase()).includes(tag.toLowerCase()))) {
-      console.log("The file does not have this tag!")
       setModalState('errorModal')
     } else {
       const delTag = async () => {
@@ -53,7 +50,6 @@ const FileListItem = ({ file }) => {
         })
         const data = await dataResponse.json()
         setModalState('successModal')
-        console.log("\nData:", JSON.stringify(data, null, 2));
       }
       delTag()
     }
@@ -157,7 +153,7 @@ const FileListItem = ({ file }) => {
                 Do you want to delete the tag <span style={{ color: '#b0b0b0' }}><strong>{nameTag}</strong></span> from the file <span style={{ color: '#b0b0b0' }}><strong>{file.name}</strong></span>?
               </Typography>
 
-              <StyledButton variant="contained" color="success" onClick={(e) => { e.stopPropagation(), console.log("Selected delete") handleDel() }}>Yes</StyledButton>
+              <StyledButton variant="contained" color="success" onClick={(e) => { e.stopPropagation(), handleDel() }}>Yes</StyledButton>
               <StyledButton variant="contained" color="error" onClick={(e) => { e.stopPropagation(), setModalState('closed') }}>No</StyledButton>
             </>
           )}
@@ -222,7 +218,6 @@ const SeeTaggedFilesView = () => {
       setErrorMessage(''); // Clear any previous error messages
 
       try {
-        console.log('Fetching data...');
         const dataResponse = await fetch("http://localhost:3002/seeTaggedFiles", {
           headers: {
             'siteId': siteId,
@@ -230,10 +225,7 @@ const SeeTaggedFilesView = () => {
           }
         });
 
-        console.log('Data response:', dataResponse);
-
         const data = await dataResponse.json();
-        console.log('Data:', data);
 
         if (!dataResponse.ok) {
           const errorMessage = 'The tag does not exist.';
@@ -320,13 +312,10 @@ const SeeTaggedFilesView = () => {
             icon: getFileExtension(dataTaggedFile.name),
             labels: dataTaggedFile.listItem.fields.GeoTag ? dataTaggedFile.listItem.fields.GeoTag.map(file2 => ({ label: file2.Label, termGuid: file2.TermGuid })) : []
           }
-          console.log(fileData.id);
 
           filesData.push(fileData)
         }
 
-        console.log(cacheFiles)
-        console.log(filesData)
         setFiles(filesData)
       } catch (error) {
         console.error('Error fetching data:', error);

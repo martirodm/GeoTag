@@ -138,14 +138,9 @@ const GeoTagView = ({ setView, setPrevView }) => {
 
       setLoading(true)
 
-
-      console.log("final id: " + folderFinalId)
-      console.log("id: " + folderId)
-      console.log(historyFolders)
       //setSelectedFolderId(folderId)
       if (folderFinalId) {
         setSelectedFolderId(folderFinalId)
-        //setFolderId(null)
       }
 
       if (selectedFolderId) {
@@ -158,7 +153,6 @@ const GeoTagView = ({ setView, setPrevView }) => {
         })
       }
 
-      console.log(selectedFolderId)
       const dataResponse = await fetch("http://localhost:3002/display-ff", {
         headers: {
           'Authorization': `Bearer ${token}`,
