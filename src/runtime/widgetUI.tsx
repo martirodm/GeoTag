@@ -43,6 +43,7 @@ const DataSourceRenderer = ({ configured, useDataSource, query, widgetId, dataRe
   const [siteWebUrl, setSiteWebUrl] = useState(null)
   const [folderId, setFolderId] = useState(null)
   const [folderFinalId, setFolderFinalId] = useState(null)
+  const [historyFolders, setHistoryFolders] = useState([])
   const [fileId, setFileId] = useState(null)
   const [fileName, setFileName] = useState(null)
   const [fileTags, setFileTags] = useState(null)
@@ -72,81 +73,79 @@ const DataSourceRenderer = ({ configured, useDataSource, query, widgetId, dataRe
 
   return (
     <div className="widget-use-feature-layer">
-      <div className="container">
-        <h3>{title}</h3>
-        <div className='goBack'>
-          {prevView &&
-            <button className='ButtonGoBack' onMouseOver={() => setGoBackHovered(true)} onMouseOut={() => setGoBackHovered(false)} onClick={() => { if (prevView == 'geoTag') { setFolderFinalId(folderId) } setView(prevView); setGoBackHovered(false); }}>
-              <img src={String(goBackHovered ? HoverIcons.GoBackIconHover : WhiteIcons.GoBackIconWhite)} />
-            </button>
-          }
-          <Spacer y={0.5} />
-        </div>
-        <div className="left-bar">
-          {view === 'home' || view === 'appCredentials' || view === 'siteName'
-            ? <button className='ButtonSelected' onClick={() => { if (view !== 'home') setPrevView('home'); setView('home'); setTitle('Home') }}>
-              <img src={String(BlackIcons.HomeIconBlack)} /> <br />
-            </button>
-            : <button className={homeHovered ? 'ButtonHover' : 'ButtonNotSelected'} onMouseOver={() => setHomeHovered(true)} onMouseOut={() => setHomeHovered(false)} onClick={() => { setPrevView('home'); setView('home'); setTitle('Home'); setHomeHovered(false); }}>
-              <img src={String(homeHovered ? HoverIcons.HomeIconHover : WhiteIcons.HomeIconWhite)} />
-            </button>
-          }
-          <Spacer y={0.5} />
-          {view === 'seeFiles'|| view === 'seeTaggedFiles'
-            ? <button className='ButtonSelected' onClick={() => { if (view !== 'seeFiles') setPrevView('seeFiles'); setView('seeFiles'); setTitle('See GeoTagged Files') }}>
-              <img src={String(BlackIcons.EyeFileIconBlack)} /> <br />
-            </button>
-            : <button className={seeFilesHovered ? 'ButtonHover' : 'ButtonNotSelected'} onMouseOver={() => setSeeFilesHovered(true)} onMouseOut={() => setSeeFilesHovered(false)} onClick={() => { setPrevView('seeFiles'); setView('seeFiles'); setTitle('See GeoTagged Files'); setSeeFilesHovered(false); }}>
-              <img src={String(seeFilesHovered ? HoverIcons.EyeFileIconHover : WhiteIcons.EyeFileIconWhite)} />
-            </button>
-          }
-          <Spacer y={0.5} />
-          {view === 'geoTag' || view === 'addTag'
-            ? <button className='ButtonSelected' onClick={() => { if (view !== 'geoTag') setPrevView('geoTag'); setView('geoTag'); setTitle('GeoTag File') }}>
-              <img src={String(BlackIcons.GeoTagIconBlack)} /> <br />
-            </button>
-            : <button className={geoTagHovered ? 'ButtonHover' : 'ButtonNotSelected'} onMouseOver={() => setGeoTagHovered(true)} onMouseOut={() => setGeoTagHovered(false)} onClick={() => { setPrevView('geoTag'); setView('geoTag'); setTitle('GeoTag File'); setGeoTagHovered(false); }}>
-              <img src={String(geoTagHovered ? HoverIcons.GeoTagIconHover : WhiteIcons.GeoTagIconWhite)} />
-            </button>
-          }
-          <Spacer y={0.5} />
-          {view === 'settings'
-            ? <button className='ButtonSelected' onClick={() => { if (view !== 'settings') setPrevView('settings'); setView('settings'); setTitle('Settings') }}>
-              <img src={String(BlackIcons.SettingIconBlack)} /> <br />
-            </button>
-            : <button className={settingsHovered ? 'ButtonHover' : 'ButtonNotSelected'} onMouseOver={() => setSettingsHovered(true)} onMouseOut={() => setSettingsHovered(false)} onClick={() => { setPrevView('settings'); setView('settings'); setTitle('Settings'); setSettingsHovered(false); }}>
-              <img src={String(settingsHovered ? HoverIcons.SettingIconHover : WhiteIcons.SettingIconWhite)} />
-            </button>
-          }
-          <Spacer y={0.5} />
-        </div>
-        <div className="body">
-          <SharedVariableContext.Provider value={{ credentials, setCredentials, siteName, setSiteName, token, setToken, siteId, setSiteId, siteWebUrl, setSiteWebUrl, folderId, setFolderId, folderFinalId, setFolderFinalId, fileId, setFileId, fileName, setFileName, fileTags, setFileTags, nameTag, setNameTag, cacheFiles, setCacheFiles, downloadIcons,imageExtensions }}>
-            {view === 'home' && <HomeView setView={setView} setPrevView={setPrevView} />}
-            {view === 'seeFiles' && <SeeFilesView
-              setView={setView}
-              setPrevView={setPrevView}
-              useDataSource={useDataSource}
-              query={query}
-              widgetId={widgetId}
-              dataRender={dataRender}
-              useMapWidgetIds={useMapWidgetIds}
-            />}
-            {view === 'geoTag' && <GeoTagView setView={setView} setPrevView={setPrevView} />}
-            {view === 'settings' && <SettingsView />}
-            {view === 'appCredentials' && <AppCredentialsView setView={setView} />}
-            {view === 'siteName' && <SiteNameView setView={setView} />}
-            {view === 'addTag' && <AddTagView
-              setView={setView}
-              useDataSource={useDataSource}
-              query={query}
-              widgetId={widgetId}
-              dataRender={dataRender}
-              useMapWidgetIds={useMapWidgetIds}
-            />}
-            {view === 'seeTaggedFiles' && <SeeTaggedFilesView />}
-          </SharedVariableContext.Provider>
-        </div>
+      <h3>{title}</h3>
+      <div className='goBack'>
+        {prevView &&
+          <button className='ButtonGoBack' onMouseOver={() => setGoBackHovered(true)} onMouseOut={() => setGoBackHovered(false)} onClick={() => { if (prevView == 'geoTag') { setFolderFinalId(folderId); } setView(prevView); setGoBackHovered(false); }}>
+            <img src={String(goBackHovered ? HoverIcons.GoBackIconHover : WhiteIcons.GoBackIconWhite)} />
+          </button>
+        }
+        <Spacer y={0.5} />
+      </div>
+      <div className="left-bar">
+        {view === 'home' || view === 'appCredentials' || view === 'siteName'
+          ? <button className='ButtonSelected' onClick={() => { if (view !== 'home') setPrevView('home'); setView('home'); setTitle('Home'); setFolderFinalId(folderId) }}>
+            <img src={String(BlackIcons.HomeIconBlack)} /> <br />
+          </button>
+          : <button className={homeHovered ? 'ButtonHover' : 'ButtonNotSelected'} onMouseOver={() => setHomeHovered(true)} onMouseOut={() => setHomeHovered(false)} onClick={() => { setPrevView('home'); setView('home'); setTitle('Home'); setHomeHovered(false); setFolderFinalId(folderId) }}>
+            <img src={String(homeHovered ? HoverIcons.HomeIconHover : WhiteIcons.HomeIconWhite)} />
+          </button>
+        }
+        <Spacer y={0.5} />
+        {view === 'seeFiles' || view === 'seeTaggedFiles'
+          ? <button className='ButtonSelected' onClick={() => { if (view !== 'seeFiles') setPrevView('seeFiles'); setView('seeFiles'); setTitle('See GeoTagged Files'); setFolderFinalId(folderId) }}>
+            <img src={String(BlackIcons.EyeFileIconBlack)} /> <br />
+          </button>
+          : <button className={seeFilesHovered ? 'ButtonHover' : 'ButtonNotSelected'} onMouseOver={() => setSeeFilesHovered(true)} onMouseOut={() => setSeeFilesHovered(false)} onClick={() => { setPrevView('seeFiles'); setView('seeFiles'); setTitle('See GeoTagged Files'); setSeeFilesHovered(false); setFolderFinalId(folderId) }}>
+            <img src={String(seeFilesHovered ? HoverIcons.EyeFileIconHover : WhiteIcons.EyeFileIconWhite)} />
+          </button>
+        }
+        <Spacer y={0.5} />
+        {view === 'geoTag' || view === 'addTag'
+          ? <button className='ButtonSelected' onClick={() => { if (view !== 'geoTag') setPrevView('geoTag'); setView('geoTag'); setTitle('GeoTag File'); setFolderFinalId(folderId) }}>
+            <img src={String(BlackIcons.GeoTagIconBlack)} /> <br />
+          </button>
+          : <button className={geoTagHovered ? 'ButtonHover' : 'ButtonNotSelected'} onMouseOver={() => setGeoTagHovered(true)} onMouseOut={() => setGeoTagHovered(false)} onClick={() => { setPrevView('geoTag'); setView('geoTag'); setTitle('GeoTag File'); setGeoTagHovered(false); setFolderFinalId(folderId) }}>
+            <img src={String(geoTagHovered ? HoverIcons.GeoTagIconHover : WhiteIcons.GeoTagIconWhite)} />
+          </button>
+        }
+        <Spacer y={0.5} />
+        {view === 'settings'
+          ? <button className='ButtonSelected' onClick={() => { if (view !== 'settings') setPrevView('settings'); setView('settings'); setTitle('Settings'); setFolderFinalId(folderId) }}>
+            <img src={String(BlackIcons.SettingIconBlack)} /> <br />
+          </button>
+          : <button className={settingsHovered ? 'ButtonHover' : 'ButtonNotSelected'} onMouseOver={() => setSettingsHovered(true)} onMouseOut={() => setSettingsHovered(false)} onClick={() => { setPrevView('settings'); setView('settings'); setTitle('Settings'); setSettingsHovered(false); setFolderFinalId(folderId) }}>
+            <img src={String(settingsHovered ? HoverIcons.SettingIconHover : WhiteIcons.SettingIconWhite)} />
+          </button>
+        }
+        <Spacer y={0.5} />
+      </div>
+      <div className="body">
+        <SharedVariableContext.Provider value={{ credentials, setCredentials, siteName, setSiteName, token, setToken, siteId, setSiteId, siteWebUrl, setSiteWebUrl, folderId, setFolderId, folderFinalId, setFolderFinalId, historyFolders, setHistoryFolders, fileId, setFileId, fileName, setFileName, fileTags, setFileTags, nameTag, setNameTag, cacheFiles, setCacheFiles, downloadIcons, imageExtensions }}>
+          {view === 'home' && <HomeView setView={setView} setPrevView={setPrevView} />}
+          {view === 'seeFiles' && <SeeFilesView
+            setView={setView}
+            setPrevView={setPrevView}
+            useDataSource={useDataSource}
+            query={query}
+            widgetId={widgetId}
+            dataRender={dataRender}
+            useMapWidgetIds={useMapWidgetIds}
+          />}
+          {view === 'geoTag' && <GeoTagView setView={setView} setPrevView={setPrevView} />}
+          {view === 'settings' && <SettingsView />}
+          {view === 'appCredentials' && <AppCredentialsView setView={setView} />}
+          {view === 'siteName' && <SiteNameView setView={setView} />}
+          {view === 'addTag' && <AddTagView
+            setView={setView}
+            useDataSource={useDataSource}
+            query={query}
+            widgetId={widgetId}
+            dataRender={dataRender}
+            useMapWidgetIds={useMapWidgetIds}
+          />}
+          {view === 'seeTaggedFiles' && <SeeTaggedFilesView />}
+        </SharedVariableContext.Provider>
       </div>
     </div>
   )
