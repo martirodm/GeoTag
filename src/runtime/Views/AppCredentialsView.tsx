@@ -28,9 +28,7 @@ const AppCredentialsView = ({ setView }) => {
 
   const handleSend = async (event) => {
     event.preventDefault() // If I don't have it, I get: This item is not published. Please open this item in Experience Builder, then click Publish to publish it.
-    // If all fields are filled I console.log()
     const data = `client_id: ${credentials.client_id}\nclient_secret: ${credentials.client_secret}\ntenant_id: ${credentials.tenant_id}`
-    //console.log(data)
 
     setLoading(true);
 

@@ -117,7 +117,6 @@ const SeeFilesView = ({ setView, setPrevView, useDataSource, query, widgetId, da
       {selectedTagType === 'Personalized' && (
         <div>
           <Spacer y={0.5} />
-
           <TextField
             type='text'
             value={nameTag || ''}

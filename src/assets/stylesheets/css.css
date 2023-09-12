@@ -8,7 +8,8 @@
     color: whitesmoke;
     display: grid;
     grid-template-columns: 20% 80%;
-    grid-template-rows: 30% 70%;
+    grid-template-rows: 10fr;
+    grid-template-rows: 13% 87%;
     gap: 0px 0px;
     grid-template-areas:
         "go-back title"
@@ -51,12 +52,14 @@ h3 {
     align-self: center;
     width: 50%;
     height: 100%;
+    margin-left: 50%;
     grid-area: left-bar;
 }
 
 .goBack {
     align-self: center;
     width: 50%;
+    margin-left: 50%;
     grid-area: go-back;
 }
 
@@ -104,7 +107,7 @@ input:-webkit-autofill:active {
     border-radius: 5px;
     background: transparent !important;
     color: whitesmoke;
-    min-width: 340px;
+    min-width: 75%;
 }
 
 .Body .MuiFilledInput-root,
@@ -129,6 +132,3 @@ input:-webkit-autofill:active {
 .BodyTag .MuiFilledInput-underline:after {
     border-bottom-color: whitesmoke;
 }
-
-/* TEST */
-
