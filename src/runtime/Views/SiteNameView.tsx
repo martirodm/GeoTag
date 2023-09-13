@@ -16,7 +16,7 @@ const ColoredLoadingButton = styled(LoadingButton)(({ theme }) => ({
 }))
 
 const SiteNameView = ({ setView }) => {
-  const { siteName, setSiteName, token, setSiteId, setSiteWebUrl } = useContext(SharedVariableContext)
+  const { siteName, setSiteName, token, setSiteId, setSiteWebUrl, serverIP } = useContext(SharedVariableContext)
   const [loading, setLoading] = useState(false)
 
   const handleChange = (event) => {
@@ -30,7 +30,7 @@ const SiteNameView = ({ setView }) => {
   const handleSend = async (event) => {
     event.preventDefault()
     setLoading(true)
-    await fetch("http://localhost:3002/set-siteName", {
+    await fetch("http://"+serverIP+":3002/set-siteName", {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -38,7 +38,7 @@ const SiteNameView = ({ setView }) => {
       body: JSON.stringify(siteName)
     })
 
-    const getSites = await fetch("http://localhost:3002/getSites", {
+    const getSites = await fetch("http://"+serverIP+":3002/getSites", {
       headers: {
         'Authorization': `Bearer ${token}`
       }

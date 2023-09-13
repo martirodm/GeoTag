@@ -15,7 +15,7 @@ const ColoredLoadingButton = styled(LoadingButton)(({ theme }) => ({
 }));
 
 const AppCredentialsView = ({ setView }) => {
-  const { credentials, setCredentials, setToken } = useContext(SharedVariableContext);
+  const { serverIP, credentials, setCredentials, setToken } = useContext(SharedVariableContext);
   const [loading, setLoading] = useState(false);
 
   const handleChange = (event) => {
@@ -33,7 +33,7 @@ const AppCredentialsView = ({ setView }) => {
     setLoading(true);
 
     // Send credentials to Express.
-    await fetch('http://localhost:3002/set-credentials', {
+    await fetch('http://'+serverIP+':3002/set-credentials', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -42,7 +42,7 @@ const AppCredentialsView = ({ setView }) => {
     });
 
     // Generate token.
-    const tokenResponse = await fetch('http://localhost:3002/token');
+    const tokenResponse = await fetch('http://'+serverIP+':3002/token');
     const tokenData = await tokenResponse.json();
 
     setToken(tokenData.accessToken);

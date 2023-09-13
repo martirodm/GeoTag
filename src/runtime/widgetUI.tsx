@@ -32,6 +32,9 @@ const DataSourceRenderer = ({ configured, useDataSource, query, widgetId, dataRe
   const [settingsHovered, setSettingsHovered] = useState(false)
 
   // --------------- Shared Variables ---------------------------
+
+  const [serverIP, setServerIP] = useState("localhost"); //CHANGE TO YOUR SERVER IP
+
   const [credentials, setCredentials] = useState({
     client_id: '',
     client_secret: '',
@@ -111,18 +114,18 @@ const DataSourceRenderer = ({ configured, useDataSource, query, widgetId, dataRe
           </button>
         }
         <Spacer y={0.5} />
-        {view === 'settings'
+        {/* {view === 'settings'
           ? <button className='ButtonSelected' onClick={() => { if (view !== 'settings') setPrevView('settings'); setView('settings'); setTitle('Settings'); setFolderFinalId(folderId) }}>
             <img src={String(BlackIcons.SettingIconBlack)} /> <br />
           </button>
           : <button className={settingsHovered ? 'ButtonHover' : 'ButtonNotSelected'} onMouseOver={() => setSettingsHovered(true)} onMouseOut={() => setSettingsHovered(false)} onClick={() => { setPrevView('settings'); setView('settings'); setTitle('Settings'); setSettingsHovered(false); setFolderFinalId(folderId) }}>
             <img src={String(settingsHovered ? HoverIcons.SettingIconHover : WhiteIcons.SettingIconWhite)} />
           </button>
-        }
+        } */}
         <Spacer y={0.5} />
       </div>
       <div className="body">
-        <SharedVariableContext.Provider value={{ credentials, setCredentials, siteName, setSiteName, token, setToken, siteId, setSiteId, siteWebUrl, setSiteWebUrl, folderId, setFolderId, folderFinalId, setFolderFinalId, historyFolders, setHistoryFolders, fileId, setFileId, fileName, setFileName, fileTags, setFileTags, nameTag, setNameTag, cacheFiles, setCacheFiles, cacheDelFiles, setCacheDelFiles, downloadIcons, imageExtensions }}>
+        <SharedVariableContext.Provider value={{ serverIP, setServerIP, credentials, setCredentials, siteName, setSiteName, token, setToken, siteId, setSiteId, siteWebUrl, setSiteWebUrl, folderId, setFolderId, folderFinalId, setFolderFinalId, historyFolders, setHistoryFolders, fileId, setFileId, fileName, setFileName, fileTags, setFileTags, nameTag, setNameTag, cacheFiles, setCacheFiles, cacheDelFiles, setCacheDelFiles, downloadIcons, imageExtensions }}>
           {view === 'home' && <HomeView setView={setView} setPrevView={setPrevView} />}
           {view === 'seeFiles' && <SeeFilesView
             setView={setView}
