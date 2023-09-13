@@ -64,7 +64,7 @@ const AddTagView = ({ setView, useDataSource, query, widgetId, dataRender, useMa
       setModalState('errorModal')
     } else {
       const addTag = async () => {
-        const dataResponse = await fetch("http://"+serverIP+":3002/addTag", {
+        const dataResponse = await fetch("https://"+serverIP+":3002/addTag", {
           method: 'PATCH',
           headers: {
             'Content-Type': 'application/json',
