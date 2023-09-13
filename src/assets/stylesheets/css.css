@@ -52,14 +52,14 @@ h3 {
     align-self: center;
     width: 50%;
     height: 100%;
-    margin-left: 50%;
+    margin-left: 30%;
     grid-area: left-bar;
 }
 
 .goBack {
     align-self: center;
     width: 50%;
-    margin-left: 50%;
+    margin-left: 30%;
     grid-area: go-back;
 }
 
@@ -88,6 +88,13 @@ h3 {
     font-size: 20px;
     margin: 15%;
     color: whitesmoke;
+}
+
+/* Change the left margin of the left bar in a small screen. */
+@media only screen and (min-height: 500px) and (max-height: 800px) and (min-width: 600px) {
+    .left-bar {
+        margin-left: 20%;
+    }
 }
 
 /* Delete white in in TextField. */
