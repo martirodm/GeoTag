@@ -11,9 +11,9 @@ Widget for Experience Builder, capable of browsing files and folders stored on y
 
 [Usage](Documentation/GeoTagUsage-Manual.docx)
 
-![Infographic](Documentation/SharePointGeoTag Infographic.png)
+![Infographic](Documentation/SharePointGeoTagInfographic.png)
 
-![Logical Schema](Documentation/GeoTag Flowchart.png)
+![Logical Schema](Documentation/GeoTagFlowchart.png)
 
 
 Developed by GeoSYS
