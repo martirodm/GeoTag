@@ -30,7 +30,7 @@ const SiteNameView = ({ setView }) => {
   const handleSend = async (event) => {
     event.preventDefault()
     setLoading(true)
-    await fetch("http://"+serverIP+":3002/set-siteName", {
+    await fetch("https://"+serverIP+":3002/set-siteName", {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -38,7 +38,7 @@ const SiteNameView = ({ setView }) => {
       body: JSON.stringify(siteName)
     })
 
-    const getSites = await fetch("http://"+serverIP+":3002/getSites", {
+    const getSites = await fetch("https://"+serverIP+":3002/getSites", {
       headers: {
         'Authorization': `Bearer ${token}`
       }

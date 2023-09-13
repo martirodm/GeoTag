@@ -153,7 +153,7 @@ const GeoTagView = ({ setView, setPrevView }) => {
         })
       }
 
-      const dataResponse = await fetch("http://"+serverIP+":3002/display-ff", {
+      const dataResponse = await fetch("https://"+serverIP+":3002/display-ff", {
         headers: {
           'Authorization': `Bearer ${token}`,
           'siteId': siteId,
