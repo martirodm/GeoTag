@@ -11,20 +11,21 @@ import Skeleton from '@mui/material/Skeleton'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import Modal from '@mui/material/Modal'
+import CircularProgress from '@mui/material/CircularProgress'
 
 import '../../assets/stylesheets/css.css'
 
 import * as FileExpIcons from '../../assets/images/FileExplorer/indexFileExp'
 
 const FileListItem = ({ file }) => {
-  const { downloadIcons, imageExtensions, nameTag, siteId, setFileTags, setCacheFiles } = useContext(SharedVariableContext)
+  const { downloadIcons, imageExtensions, nameTag, siteId, setFileTags, cacheFiles, setCacheFiles, cacheDelFiles, setCacheDelFiles } = useContext(SharedVariableContext)
   const [seeHovered, setSeeHovered] = useState(false)
   const [openHovered, setOpenHovered] = useState(false)
   const [fileHovered, setFileHovered] = useState(false)
   const [deleteHovered, setDelteHovered] = useState(false)
   const [actualFileTags, setActualFileTags] = useState(false)
-  const [modalState, setModalState] = useState<'closed' | 'firstModal' | 'successModal' | 'errorModal'>('closed');
-
+  const [modalState, setModalState] = useState<'closed' | 'firstModal' | 'successModal' | 'createColumnModal' | 'errorModal'>('closed');
+  const [isLoading, setIsLoading] = useState(false)
   const tag = nameTag, fileTags = file.labels, fileId = file.id
 
   const handleOpen = () => {
@@ -32,6 +33,7 @@ const FileListItem = ({ file }) => {
   }
 
   const handleDel = () => {
+    setIsLoading(true)
     if (!(fileTags.map(tag => tag.label.toLowerCase()).includes(tag.toLowerCase()))) {
       setModalState('errorModal')
     } else {
@@ -49,7 +51,19 @@ const FileListItem = ({ file }) => {
           })
         })
         const data = await dataResponse.json()
-        setModalState('successModal')
+        if (data.label === "columnNotFound") {
+          setIsLoading(false)
+          setModalState('createColumnModal')
+        } else {
+          setIsLoading(false)
+          if (cacheFiles.some(label => label.taglabel === data.label && label.tagguid == data.termGuid)){
+            const cacheFiles2 = cacheFiles.filter(label => !(label.taglabel === data.label && label.tagguid === data.termGuid))
+            setCacheFiles(cacheFiles2)
+          }
+          console.log(cacheFiles)
+          console.log(data)
+          setModalState('successModal')
+        }
       }
       delTag()
     }
@@ -152,9 +166,14 @@ const FileListItem = ({ file }) => {
               <Typography className='truncateTag' id="modal-modal-description" sx={{ mt: 2, whiteSpace: 'normal' }}>  {/* whiteSpace is for breaking to a new line if I have an ellipsis*/}
                 Do you want to delete the tag <span style={{ color: '#b0b0b0' }}><strong>{nameTag}</strong></span> from the file <span style={{ color: '#b0b0b0' }}><strong>{file.name}</strong></span>?
               </Typography>
-
-              <StyledButton variant="contained" color="success" onClick={(e) => { e.stopPropagation(), handleDel() }}>Yes</StyledButton>
-              <StyledButton variant="contained" color="error" onClick={(e) => { e.stopPropagation(), setModalState('closed') }}>No</StyledButton>
+              {isLoading ? (
+                <CircularProgress color="inherit" />
+              ) : (
+                <>
+                  <StyledButton variant="contained" color="success" onClick={(e) => { e.stopPropagation(), handleDel() }}>Yes</StyledButton>
+                  <StyledButton variant="contained" color="error" onClick={(e) => { e.stopPropagation(), setModalState('closed') }}>No</StyledButton>
+                </>
+              )}
             </>
           )}
 
@@ -164,6 +183,18 @@ const FileListItem = ({ file }) => {
                 The tag has been deleted succesfully!
               </Typography>
               <StyledButton variant="contained" color="success" onClick={(e) => { e.stopPropagation(), setModalState('closed') }}>Close</StyledButton>
+            </>
+          )}
+
+          {modalState === 'createColumnModal' && (
+            <>
+              <Typography id="modal-modal-title" variant="h6" component="h2" sx={{ fontWeight: 'bolder', color: 'yellow' }}>
+                Create a "Managed Metadata" column on SharePoint called "GeoTag"
+              </Typography>
+              <Typography id="modal-modal-title" variant="body2" component="h2" sx={{ color: 'yellow' }}>
+                If unsure, please check the documentation
+              </Typography>
+              <StyledButton variant="contained" color="success" onClick={() => setModalState('closed')}>Close</StyledButton>
             </>
           )}
 
@@ -239,10 +270,13 @@ const SeeTaggedFilesView = () => {
         if (parts2.length > 1) {
           siteUrlName = parts2[1].split("/")[0]
         }
-
+        
         //FILES THAT HAVE BEEN JUST CREATED ON SAME SESSION
         for (let cacheFile of cacheFiles) {
-          if (cacheFile.taglabel === nameTag) {
+          console.log(cacheFile.taglabel)
+          console.log(nameTag.toLowerCase())
+          if (cacheFile.taglabel.toLowerCase() === nameTag.toLowerCase()) {
+            console.log("GG")
 
             const dataCacheFileResponse = await fetch("http://localhost:3002/seeDataTaggedFile", {
               headers: {
@@ -292,6 +326,7 @@ const SeeTaggedFilesView = () => {
             }
           })
           const dataTaggedFile = await dataTaggedFileResponse.json()
+          console.log(dataTaggedFile)
 
           let TaggedFileparsedUrl = new URL(dataTaggedFile.listItem.webUrl)
           let TaggedFilenewUrl = TaggedFileparsedUrl.pathname
@@ -312,7 +347,6 @@ const SeeTaggedFilesView = () => {
             icon: getFileExtension(dataTaggedFile.name),
             labels: dataTaggedFile.listItem.fields.GeoTag ? dataTaggedFile.listItem.fields.GeoTag.map(file2 => ({ label: file2.Label, termGuid: file2.TermGuid })) : []
           }
-
           filesData.push(fileData)
         }
 

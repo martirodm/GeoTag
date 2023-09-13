@@ -9,6 +9,7 @@ import Typography from '@mui/material/Typography'
 import Modal from '@mui/material/Modal'
 import { Spacer } from '@nextui-org/react'
 import TextField from '@mui/material/TextField'
+import CircularProgress from '@mui/material/CircularProgress'
 import '../../assets/stylesheets/addtag.css'
 
 const AnimatedUnderlineButton = styled(Button)(({ theme }) => ({
@@ -43,7 +44,9 @@ const AddTagView = ({ setView, useDataSource, query, widgetId, dataRender, useMa
   const CoordTagRef = React.useRef(null)
   const FieldTagRef = React.useRef(null)
   const [activeButton, setActiveButton] = useState<string | null>(null)
-  const [modalState, setModalState] = useState<'closed' | 'firstModal' | 'successModal' | 'errorModal'>('closed');
+  const [modalState, setModalState] = useState<'closed' | 'firstModal' | 'successModal' | 'createColumnModal' | 'errorModal'>('closed');
+  const [isLoading, setIsLoading] = useState(false)
+
 
   const handleOpen = (ref, name) => {
     setModalState('firstModal')
@@ -56,6 +59,7 @@ const AddTagView = ({ setView, useDataSource, query, widgetId, dataRender, useMa
   const handleClose = () => setOpen(false)
 
   const handleAdd = () => {
+    setIsLoading(true)
     if (fileTags.map(tag => tag.label.toLowerCase()).includes(tag.toLowerCase())) {
       setModalState('errorModal')
     } else {
@@ -73,9 +77,15 @@ const AddTagView = ({ setView, useDataSource, query, widgetId, dataRender, useMa
           })
         })
         const data = await dataResponse.json()
-        setFileTags(fileTags => [...fileTags, data])
-        setCacheFiles(cacheFiles => [...cacheFiles, { fileid: fileId, filename: fileName, taglabel: data.label, tagguid: data.termGuid }])
-        setModalState('successModal')
+        if (data.label === "columnNotFound") {
+          setIsLoading(false)
+          setModalState('createColumnModal')
+        } else {
+          setFileTags(fileTags => [...fileTags, data])
+          setCacheFiles(cacheFiles => [...cacheFiles, { fileid: fileId, filename: fileName, taglabel: data.label, tagguid: data.termGuid }])
+          setIsLoading(false)
+          setModalState('successModal')
+        }
       }
       addTag()
     }
@@ -210,9 +220,14 @@ const AddTagView = ({ setView, useDataSource, query, widgetId, dataRender, useMa
               <Typography className='truncateTag' id="modal-modal-description" sx={{ mt: 2, whiteSpace: 'normal' }}>  {/* whiteSpace is for breaking to a new line if I have an ellipsis*/}
                 Add the tag <span style={{ color: '#b0b0b0' }}><strong>{tag}</strong></span> to the file <span style={{ color: '#b0b0b0' }}><strong>{fileName}</strong></span>?
               </Typography>
-
-              <StyledButton variant="contained" color="success" onClick={handleAdd}>Yes</StyledButton>
-              <StyledButton variant="contained" color="error" onClick={() => setModalState('closed')}>No</StyledButton>
+              {isLoading ? (
+                <CircularProgress color="inherit" />
+              ) : (
+                <>
+                  <StyledButton variant="contained" color="success" onClick={handleAdd}>Yes</StyledButton>
+                  <StyledButton variant="contained" color="error" onClick={() => setModalState('closed')}>No</StyledButton>
+                </>
+              )}
             </>
           )}
 
@@ -220,6 +235,18 @@ const AddTagView = ({ setView, useDataSource, query, widgetId, dataRender, useMa
             <>
               <Typography id="modal-modal-title" variant="h6" component="h2" sx={{ fontWeight: 'bolder', color: 'whitesmoke' }}>
                 The tag has been created succesfully!
+              </Typography>
+              <StyledButton variant="contained" color="success" onClick={() => setModalState('closed')}>Close</StyledButton>
+            </>
+          )}
+
+          {modalState === 'createColumnModal' && (
+            <>
+              <Typography id="modal-modal-title" variant="h6" component="h2" sx={{ fontWeight: 'bolder', color: 'yellow' }}>
+                Create a "Managed Metadata" column on SharePoint called "GeoTag"
+              </Typography>
+              <Typography id="modal-modal-title" variant="body2" component="h2" sx={{color: 'yellow' }}>
+                If unsure, please check the documentation
               </Typography>
               <StyledButton variant="contained" color="success" onClick={() => setModalState('closed')}>Close</StyledButton>
             </>
