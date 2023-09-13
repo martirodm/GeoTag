@@ -18,7 +18,7 @@ import '../../assets/stylesheets/css.css'
 import * as FileExpIcons from '../../assets/images/FileExplorer/indexFileExp'
 
 const FileListItem = ({ file }) => {
-  const { downloadIcons, imageExtensions, nameTag, siteId, setFileTags, cacheFiles, setCacheFiles, cacheDelFiles, setCacheDelFiles } = useContext(SharedVariableContext)
+  const { serverIP,downloadIcons, imageExtensions, nameTag, siteId, setFileTags, cacheFiles, setCacheFiles, cacheDelFiles, setCacheDelFiles } = useContext(SharedVariableContext)
   const [seeHovered, setSeeHovered] = useState(false)
   const [openHovered, setOpenHovered] = useState(false)
   const [fileHovered, setFileHovered] = useState(false)
@@ -38,7 +38,7 @@ const FileListItem = ({ file }) => {
       setModalState('errorModal')
     } else {
       const delTag = async () => {
-        const dataResponse = await fetch("http://localhost:3002/delTag", {
+        const dataResponse = await fetch("http://"+serverIP+":3002/delTag", {
           method: 'PATCH',
           headers: {
             'Content-Type': 'application/json',
@@ -213,7 +213,7 @@ const FileListItem = ({ file }) => {
 }
 
 const SeeTaggedFilesView = () => {
-  const { siteId, nameTag, siteWebUrl, downloadIcons, imageExtensions, cacheFiles, setCacheFiles } = useContext(SharedVariableContext)
+  const { serverIP,siteId, nameTag, siteWebUrl, downloadIcons, imageExtensions, cacheFiles, setCacheFiles } = useContext(SharedVariableContext)
   const [loading, setLoading] = useState(true)
   const [files, setFiles] = useState([])
   const [errorMessage, setErrorMessage] = useState('')
@@ -249,7 +249,7 @@ const SeeTaggedFilesView = () => {
       setErrorMessage(''); // Clear any previous error messages
 
       try {
-        const dataResponse = await fetch("http://localhost:3002/seeTaggedFiles", {
+        const dataResponse = await fetch("http://"+serverIP+":3002/seeTaggedFiles", {
           headers: {
             'siteId': siteId,
             'nameTag': nameTag
@@ -278,7 +278,7 @@ const SeeTaggedFilesView = () => {
           if (cacheFile.taglabel.toLowerCase() === nameTag.toLowerCase()) {
             console.log("GG")
 
-            const dataCacheFileResponse = await fetch("http://localhost:3002/seeDataTaggedFile", {
+            const dataCacheFileResponse = await fetch("http://"+serverIP+":3002/seeDataTaggedFile", {
               headers: {
                 'siteId': siteId,
                 'fileId': cacheFile.fileid
@@ -319,7 +319,7 @@ const SeeTaggedFilesView = () => {
             setCacheFiles(cacheFiles2)
           }
 
-          const dataTaggedFileResponse = await fetch("http://localhost:3002/seeDataTaggedFile", {
+          const dataTaggedFileResponse = await fetch("http://"+serverIP+":3002/seeDataTaggedFile", {
             headers: {
               'siteId': siteId,
               'fileId': file.id

@@ -106,7 +106,7 @@ const FileListItem = ({ file, setView, setPrevView }) => {
 }
 
 const GeoTagView = ({ setView, setPrevView }) => {
-  const { token, siteId, siteWebUrl, folderFinalId, setFolderFinalId, folderId, setFolderId, historyFolders, setHistoryFolders } = useContext(SharedVariableContext)
+  const { serverIP, token, siteId, siteWebUrl, folderFinalId, setFolderFinalId, folderId, setFolderId, historyFolders, setHistoryFolders } = useContext(SharedVariableContext)
   const [loading, setLoading] = useState(true)
   const [folders, setFolders] = useState([])
   const [files, setFiles] = useState([])
@@ -153,7 +153,7 @@ const GeoTagView = ({ setView, setPrevView }) => {
         })
       }
 
-      const dataResponse = await fetch("http://localhost:3002/display-ff", {
+      const dataResponse = await fetch("http://"+serverIP+":3002/display-ff", {
         headers: {
           'Authorization': `Bearer ${token}`,
           'siteId': siteId,
