@@ -44,7 +44,7 @@ export default function Widget(props: AllWidgetProps<{}>) { // Function Componen
   const dataRender = (ds: DataSource, onButtonClick) => {
     if (!ds || ds.getStatus() !== DataSourceStatus.Loaded || ds.getRecords().length === 0) {
       return (
-          <div className="no-popup">Please select a PopUp.</div>
+        <div className="no-popup">Please select a PopUp.</div>
       );
     }
 
