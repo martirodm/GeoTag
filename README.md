@@ -9,7 +9,7 @@ Widget for Experience Builder, capable of browsing files and folders stored on y
 
 [Installation Guide](Documentation/GeoTagInstallation-Manual.pdf)
 
-[Usage](Documentation/GeoTagUsage-Manual.docx)
+[Usage](Documentation/GeoTagUsage-Manual.pdf)
 
 
 Developed by GeoSYS
